@@ -1,0 +1,19 @@
+THE LIGHTHOUSE — Instrucciones de instalación (Mac)
+=====================================================
+
+1. Copiá TODA esta carpeta a tu escritorio (o donde quieras).
+   ¡Importante: los 3 archivos deben estar siempre juntos!
+
+2. Hacé doble clic en "TheLighthouse.app" para abrir la app.
+   → Si Mac dice "no se puede abrir porque es de un desarrollador no identificado":
+      · Clic derecho sobre TheLighthouse.app
+      · Elegí "Abrir"
+      · Confirmá "Abrir" en el diálogo
+
+3. La primera vez que abras, aparecerá tu logo con el efecto de luz.
+   Hacé clic en el logo o en el botón para entrar a la app completa.
+
+Archivos incluidos:
+  • TheLighthouse.app         ← el ícono para el escritorio
+  • lighthouse-launcher.html  ← pantalla de inicio con tu logo
+  • the-lighthouse-app.html   ← la app completa
