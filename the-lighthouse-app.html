@@ -648,33 +648,46 @@ document.addEventListener('mousemove',e=>{cursorEl.style.left=e.clientX+'px';cur
 ═══════════════════════════════════════════════ */
 const sc=document.getElementById('scene'), X=sc.getContext('2d');
 let W,H,GROUND;
-const state={lit:0, showChar:false, charX:0, charAlpha:0, walk:0, flash:0,
+const state={lit:0, showChar:false, charX:0, charY:0, charScale:1, charAlpha:0, walk:0, flash:0,
   atomA:0, atomX:0, atomY:0, door:0, beam:0, rise:0};
 
-let trees=[], spores=[], glowfar=[], ripples=[], SMALL=false;
+let bigtrees=[], foliage=[], orbs=[], spores=[], stars=[], ripples=[], SMALL=false;
+let LX, TBASE, TW;
 function build(){
-  W=sc.width=window.innerWidth; H=sc.height=window.innerHeight; GROUND=H*0.80;
-  SMALL = W<760;
-  trees=[]; spores=[]; glowfar=[];
-  // far soft light orbs (mist lanterns)
-  const gN=SMALL?4:7;
-  for(let i=0;i<gN;i++) glowfar.push({x:Math.random()*W,y:H*0.2+Math.random()*H*0.42,r:60+Math.random()*120,
-    c:['80,230,235','150,120,255','255,110,200','90,255,200'][i%4],ph:Math.random()*6});
-  // tree layers (back -> front)
-  const layers=[{n:6,sc:.55,a:.35,col:'8,28,40'},{n:5,sc:.8,a:.55,col:'6,22,34'},{n:4,sc:1.15,a:.85,col:'3,14,24'}];
-  layers.forEach((L,li)=>{
-    const n=SMALL?Math.max(2,Math.round(L.n*0.55)):L.n;
-    for(let i=0;i<n;i++){
-      const x=(i+0.5)/n*W + (Math.random()-0.5)*W/n*0.6;
-      trees.push({x, base:GROUND+li*14, h:(H*0.5+Math.random()*H*0.28)*L.sc, w:(28+Math.random()*26)*L.sc,
-        a:L.a, col:L.col, hue:['95,247,255','62,233,209','180,120,255','255,95,206'][Math.floor(Math.random()*4)],
-        sway:Math.random()*6, branches:SMALL?3:3+Math.floor(Math.random()*3)});
-    }
+  W=sc.width=window.innerWidth; H=sc.height=window.innerHeight;
+  SMALL=W<760; GROUND=H*0.80;
+  TBASE=H*0.66; LX=W*(SMALL?0.5:0.6); TW=Math.min(150,W*0.13);
+  bigtrees=[]; foliage=[]; orbs=[]; spores=[]; stars=[];
+  // starfield, denser along a diagonal nebula
+  const stN=SMALL?130:240;
+  for(let i=0;i<stN;i++){
+    const neb=Math.random()<0.55; let x=Math.random()*W, y=Math.random()*H*0.6;
+    if(neb){ const u=Math.random(); x=W*(0.95-u*0.8)+(Math.random()-0.5)*W*0.18; y=H*(0.02+u*0.5)+(Math.random()-0.5)*H*0.1; }
+    stars.push({x,y,r:Math.random()*1.3+0.2,ph:Math.random()*6,neb});
+  }
+  // giant bioluminescent glow-trees (Pandora), flanking, behind the tower
+  const tHues=['95,247,255','150,90,255','255,95,206','120,120,255'];
+  const txs=SMALL?[0.1,0.92]:[0.07,0.24,0.84,0.97];
+  txs.forEach((fx,i)=>{
+    const h=H*(0.4+Math.random()*0.16);
+    const tr={x:W*fx, base:TBASE+H*0.04+Math.random()*H*0.05, h, w:TW*(0.7+Math.random()*0.45), hue:tHues[i%tHues.length], tendrils:[]};
+    const nt=SMALL?5:8;
+    for(let k=0;k<nt;k++) tr.tendrils.push({dx:-0.75+k/(nt-1)*1.5, len:h*(0.18+Math.random()*0.3), ph:Math.random()*6});
+    bigtrees.push(tr);
   });
-  const spN=SMALL?42:90;
-  for(let i=0;i<spN;i++) spores.push({x:Math.random()*W,y:Math.random()*H,r:0.6+Math.random()*2.2,
-    sp:0.15+Math.random()*0.5,drift:Math.random()*Math.PI*2,
-    c:['120,255,235','170,150,255','255,140,215','150,235,255'][Math.floor(Math.random()*4)]});
+  // foreground neon foliage at the edges (frames the path)
+  const fHues=['95,247,255','150,90,255','255,95,206','62,233,209'];
+  const fc=SMALL?3:5;
+  for(let i=0;i<fc;i++){
+    const side=i%2?1:-1, fx=side<0?(0.0+Math.random()*0.13):(0.87+Math.random()*0.13);
+    foliage.push({x:W*fx, y:H*(0.84+Math.random()*0.14), s:(SMALL?0.7:0.9)+Math.random()*0.6, hue:fHues[i%fHues.length], side, ph:Math.random()*6, leaves:6+Math.floor(Math.random()*4)});
+  }
+  // floating translucent orbs
+  const oc=SMALL?3:6;
+  for(let i=0;i<oc;i++) orbs.push({x:Math.random()*W,y:H*0.12+Math.random()*H*0.5,r:9+Math.random()*26,sp:0.08+Math.random()*0.22,ph:Math.random()*6,hue:['150,235,255','190,160,255','255,150,215'][i%3]});
+  // drifting spores
+  const spN=SMALL?40:90;
+  for(let i=0;i<spN;i++) spores.push({x:Math.random()*W,y:Math.random()*H,r:0.6+Math.random()*2,sp:0.15+Math.random()*0.5,drift:Math.random()*6,c:['120,255,235','170,150,255','255,140,215','150,235,255'][i%4]});
 }
 build();
 window.addEventListener('resize',build);
@@ -682,163 +695,150 @@ window.addEventListener('resize',build);
 function lerp(a,b,t){return a+(b-a)*t;}
 function easeIO(t){return t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;}
 
-function drawTree(tr,t){
-  const swayA=Math.sin(t*0.6+tr.x)*0.04;
-  X.save(); X.translate(tr.x,tr.base); X.rotate(swayA);
-  // trunk
-  X.beginPath(); X.moveTo(-tr.w*0.16,0);
-  X.quadraticCurveTo(-tr.w*0.06,-tr.h*0.5,-tr.w*0.03,-tr.h);
-  X.lineTo(tr.w*0.03,-tr.h);
-  X.quadraticCurveTo(tr.w*0.06,-tr.h*0.5,tr.w*0.16,0);
-  X.closePath();
-  X.fillStyle=`rgba(${tr.col},${tr.a})`; X.fill();
-  // arcing branches with bioluminescent clusters
-  for(let b=0;b<tr.branches;b++){
-    const f=b/(tr.branches-1||1);
-    const by=-tr.h*(0.45+f*0.5), dir=b%2?1:-1;
-    const len=tr.w*(1.1+f*0.7);
-    X.beginPath(); X.moveTo(0,by);
-    X.quadraticCurveTo(dir*len*0.5,by-tr.h*0.06,dir*len,by-tr.h*0.16-f*tr.h*0.1);
-    X.strokeStyle=`rgba(${tr.col},${tr.a})`; X.lineWidth=tr.w*0.12*(1-f*0.4); X.lineCap='round'; X.stroke();
-    // glow leaves
-    const ex=dir*len, ey=by-tr.h*0.16-f*tr.h*0.1;
-    for(let g=0;g<4;g++){
-      const gx=ex+(Math.random()-0.5)*tr.w*0.8, gy=ey+(Math.random()-0.5)*tr.h*0.12;
-      const pulse=0.4+Math.abs(Math.sin(t*1.4+b+g+tr.x))*0.6;
-      const gr=tr.w*0.16*pulse;
-      const gg=X.createRadialGradient(gx,gy,0,gx,gy,gr*3);
-      gg.addColorStop(0,`rgba(${tr.hue},${0.55*pulse*tr.a*1.6})`);
-      gg.addColorStop(.4,`rgba(${tr.hue},${0.2*pulse*tr.a})`);
-      gg.addColorStop(1,'rgba(0,0,0,0)');
-      X.beginPath(); X.arc(gx,gy,gr*3,0,Math.PI*2); X.fillStyle=gg; X.fill();
-      X.beginPath(); X.arc(gx,gy,gr*0.5,0,Math.PI*2); X.fillStyle=`rgba(${tr.hue},${0.8*pulse})`; X.fill();
-    }
+/* giant bioluminescent anemone-tree */
+function drawGlowTree(tr,t){
+  X.save(); X.translate(tr.x,tr.base); X.rotate(Math.sin(t*0.4+tr.x*0.01)*0.012);
+  X.beginPath(); X.moveTo(-tr.w*0.05,0); X.quadraticCurveTo(-tr.w*0.02,-tr.h*0.6,0,-tr.h);
+  X.quadraticCurveTo(tr.w*0.02,-tr.h*0.6,tr.w*0.05,0); X.closePath();
+  X.fillStyle='rgba(10,14,30,0.82)'; X.fill();
+  const cy=-tr.h, cr=tr.w*1.5;
+  const cg=X.createRadialGradient(0,cy,0,0,cy,cr);
+  cg.addColorStop(0,`rgba(${tr.hue},0.42)`); cg.addColorStop(.45,`rgba(${tr.hue},0.13)`); cg.addColorStop(1,'rgba(0,0,0,0)');
+  X.beginPath(); X.arc(0,cy,cr,0,Math.PI*2); X.fillStyle=cg; X.fill();
+  X.beginPath(); X.ellipse(0,cy,cr*0.7,cr*0.42,0,Math.PI,Math.PI*2); X.fillStyle=`rgba(${tr.hue},0.1)`; X.fill();
+  X.strokeStyle=`rgba(${tr.hue},0.4)`; X.lineWidth=1.3; X.stroke();
+  for(let i=0;i<=8;i++){ const a=Math.PI+i/8*Math.PI; X.beginPath(); X.moveTo(0,cy); X.lineTo(Math.cos(a)*cr*0.7,cy+Math.sin(a)*cr*0.42); X.strokeStyle=`rgba(${tr.hue},0.18)`; X.lineWidth=0.7; X.stroke(); }
+  tr.tendrils.forEach(td=>{
+    const sx=td.dx*cr*0.66, sy=cy+Math.cos(td.dx)*cr*0.08, ex=sx+Math.sin(t*0.7+td.ph)*7, ey=sy+td.len;
+    X.beginPath(); X.moveTo(sx,sy); X.quadraticCurveTo(sx+Math.sin(t*0.6+td.ph)*9,sy+td.len*0.5,ex,ey);
+    X.strokeStyle=`rgba(${tr.hue},0.28)`; X.lineWidth=1; X.stroke();
+    const tp=0.5+Math.abs(Math.sin(t*1.4+td.ph))*0.5;
+    const tg=X.createRadialGradient(ex,ey,0,ex,ey,6*tp);
+    tg.addColorStop(0,`rgba(${tr.hue},${0.8*tp})`); tg.addColorStop(1,'rgba(0,0,0,0)');
+    X.beginPath(); X.arc(ex,ey,6*tp,0,Math.PI*2); X.fillStyle=tg; X.fill();
+  });
+  X.restore();
+}
+
+/* foreground neon foliage cluster */
+function drawFoliage(f,t){
+  X.save(); X.translate(f.x,f.y); X.scale(f.s,f.s);
+  for(let i=0;i<f.leaves;i++){
+    const a=-Math.PI*0.5+(i/(f.leaves-1)-0.5)*Math.PI*1.15;
+    const len=70+(i%2?28:0)+Math.sin(t*0.8+f.ph+i)*4, ex=Math.cos(a)*len, ey=Math.sin(a)*len*1.15;
+    X.beginPath(); X.moveTo(0,0); X.quadraticCurveTo(ex*0.4-Math.sin(a)*14,ey*0.5,ex,ey);
+    X.strokeStyle=`rgba(${f.hue},0.45)`; X.lineWidth=3.6; X.lineCap='round'; X.stroke();
+    X.strokeStyle=`rgba(${f.hue},0.85)`; X.lineWidth=1.1; X.stroke();
+    const tp=0.5+Math.abs(Math.sin(t*1.3+i+f.ph))*0.5;
+    const g=X.createRadialGradient(ex,ey,0,ex,ey,7*tp);
+    g.addColorStop(0,`rgba(${f.hue},${0.9*tp})`); g.addColorStop(1,'rgba(0,0,0,0)');
+    X.beginPath(); X.arc(ex,ey,7*tp,0,Math.PI*2); X.fillStyle=g; X.fill();
   }
   X.restore();
 }
 
-/* The Lighthouse — organic tree-fused tower */
-function drawLighthouse(t){
-  const lx=W*0.80, baseY=GROUND, Hh=H*0.56, Ww=Math.min(150,W*0.13);
+/* floating translucent orb */
+function drawOrb(o,t){
+  o.y-=o.sp; if(o.y<-o.r){o.y=H+o.r;o.x=Math.random()*W;}
+  const x=o.x+Math.sin(t*0.5+o.ph)*12, y=o.y;
+  const g=X.createRadialGradient(x-o.r*0.3,y-o.r*0.3,0,x,y,o.r);
+  g.addColorStop(0,'rgba(255,255,255,0.22)'); g.addColorStop(.4,`rgba(${o.hue},0.12)`); g.addColorStop(.85,`rgba(${o.hue},0.05)`); g.addColorStop(1,'rgba(0,0,0,0)');
+  X.beginPath(); X.arc(x,y,o.r,0,Math.PI*2); X.fillStyle=g; X.fill();
+  X.beginPath(); X.arc(x,y,o.r,0,Math.PI*2); X.strokeStyle=`rgba(${o.hue},0.28)`; X.lineWidth=1; X.stroke();
+  X.beginPath(); X.arc(x-o.r*0.34,y-o.r*0.34,o.r*0.13,0,Math.PI*2); X.fillStyle='rgba(255,255,255,0.5)'; X.fill();
+}
+
+/* wet reflective stone path leading to the tower */
+function drawPath(){
+  const topY=TBASE+H*0.015, botY=H, topHW=TW*0.7, botHW=W*0.24;
+  X.beginPath(); X.moveTo(LX-topHW,topY); X.lineTo(LX+topHW,topY); X.lineTo(W*0.5+botHW,botY); X.lineTo(W*0.5-botHW,botY); X.closePath();
+  const pg=X.createLinearGradient(0,topY,0,botY);
+  pg.addColorStop(0,'rgba(44,50,78,0.6)'); pg.addColorStop(.5,'rgba(22,28,50,0.52)'); pg.addColorStop(1,'rgba(12,16,32,0.42)');
+  X.fillStyle=pg; X.fill();
   X.save();
-  // root base
-  X.beginPath();
-  X.moveTo(lx-Ww*0.7,baseY);
-  X.quadraticCurveTo(lx-Ww*1.1,baseY-10,lx-Ww*1.4,baseY+6);
-  X.moveTo(lx+Ww*0.7,baseY);
-  X.quadraticCurveTo(lx+Ww*1.1,baseY-10,lx+Ww*1.45,baseY+6);
-  X.strokeStyle='rgba(60,120,150,0.35)'; X.lineWidth=4; X.lineCap='round'; X.stroke();
-  // tower body
-  X.beginPath();
-  X.moveTo(lx-Ww*0.55,baseY);
-  X.quadraticCurveTo(lx-Ww*0.4,baseY-Hh*0.55,lx-Ww*0.34,baseY-Hh*0.86);
-  X.lineTo(lx+Ww*0.34,baseY-Hh*0.86);
-  X.quadraticCurveTo(lx+Ww*0.4,baseY-Hh*0.55,lx+Ww*0.55,baseY);
-  X.closePath();
-  const tg=X.createLinearGradient(lx,baseY,lx,baseY-Hh);
-  tg.addColorStop(0,'rgba(20,55,75,0.55)'); tg.addColorStop(1,'rgba(40,90,120,0.32)');
-  X.fillStyle=tg; X.fill();
-  X.strokeStyle=`rgba(110,225,235,${0.25+state.lit*0.5})`; X.lineWidth=1.4; X.stroke();
-  // ── doorway at the base (opens during entry) ──
-  const dw=Ww*0.36, dh=Hh*0.2;
-  X.beginPath();
-  X.moveTo(lx-dw*0.5,baseY);
-  X.lineTo(lx-dw*0.5,baseY-dh*0.6);
-  X.quadraticCurveTo(lx,baseY-dh*1.05,lx+dw*0.5,baseY-dh*0.6);
-  X.lineTo(lx+dw*0.5,baseY);
-  X.closePath();
-  X.fillStyle='rgba(6,18,30,0.6)';
-  X.strokeStyle=`rgba(140,235,245,${0.3+state.lit*0.5})`; X.lineWidth=1.1; X.fill(); X.stroke();
-  if(state.door>0){
-    const dO=state.door, dgr=X.createRadialGradient(lx,baseY-dh*0.5,0,lx,baseY-dh*0.5,dh*1.2);
-    dgr.addColorStop(0,`rgba(255,255,250,${0.92*dO})`); dgr.addColorStop(.4,`rgba(165,245,255,${0.6*dO})`); dgr.addColorStop(1,'rgba(0,0,0,0)');
-    X.beginPath(); X.ellipse(lx,baseY-dh*0.5,dw*0.5*dO+5,dh*0.62,0,0,Math.PI*2); X.fillStyle=dgr; X.fill();
+  X.beginPath(); X.moveTo(LX-topHW*0.32,topY); X.lineTo(LX+topHW*0.32,topY); X.lineTo(W*0.5+botHW*0.32,botY); X.lineTo(W*0.5-botHW*0.32,botY); X.closePath(); X.clip();
+  const rg=X.createLinearGradient(0,topY,0,botY);
+  rg.addColorStop(0,`rgba(255,210,140,${0.16+state.lit*0.22})`); rg.addColorStop(.55,'rgba(150,180,255,0.05)'); rg.addColorStop(1,'rgba(0,0,0,0)');
+  X.fillStyle=rg; X.fillRect(0,topY,W,botY-topY);
+  X.restore();
+}
+
+/* The Lighthouse — gothic stone tower, glowing amber doorway, light beam */
+function drawLighthouse(t){
+  const L=state.lit, cx=LX, base=TBASE, towerH=H*0.54, top=base-towerH, wB=TW*0.54, wT=TW*0.46;
+  X.save();
+  // steps below the door
+  for(let i=4;i>=0;i--){
+    const sy=base+i*H*0.011, hw=wB*0.75+i*TW*0.085;
+    X.beginPath(); X.rect(cx-hw,sy,hw*2,H*0.013);
+    X.fillStyle=`rgba(${28-i*2},${34-i*2},${56-i*3},0.92)`; X.fill();
+    X.strokeStyle='rgba(150,170,210,0.1)'; X.lineWidth=0.6; X.stroke();
   }
-  // bioluminescent veins climbing the tower
-  for(let v=0;v<5;v++){
-    const off=(v/4-0.5)*Ww*0.7;
-    X.beginPath(); X.moveTo(lx+off*0.5,baseY-4);
-    for(let s=0;s<=6;s++){
-      const yy=baseY-(s/6)*Hh*0.84;
-      const xx=lx+off*(1-s/8)+Math.sin(s*1.3+v)*Ww*0.07;
-      X.lineTo(xx,yy);
-    }
-    X.strokeStyle=`rgba(${['95,247,255','62,233,209','180,120,255'][v%3]},${0.12+state.lit*0.55})`;
-    X.lineWidth=1.4; X.stroke();
+  const ssg=X.createRadialGradient(cx,base,0,cx,base,wB*1.7);
+  ssg.addColorStop(0,`rgba(255,205,130,${0.18+L*0.3+state.door*0.3})`); ssg.addColorStop(1,'rgba(0,0,0,0)');
+  X.beginPath(); X.ellipse(cx,base+H*0.015,wB*1.7,H*0.05,0,0,Math.PI*2); X.fillStyle=ssg; X.fill();
+
+  // tower body (dark gothic stone)
+  X.beginPath();
+  X.moveTo(cx-wB,base); X.lineTo(cx-wT,top+towerH*0.1);
+  X.quadraticCurveTo(cx-wT,top,cx-wT*0.82,top);
+  X.lineTo(cx+wT*0.82,top);
+  X.quadraticCurveTo(cx+wT,top,cx+wT,top+towerH*0.1);
+  X.lineTo(cx+wB,base); X.closePath();
+  const bg=X.createLinearGradient(cx-wB,0,cx+wB,0);
+  bg.addColorStop(0,'#0b1130'); bg.addColorStop(.5,'#1b2350'); bg.addColorStop(1,'#0a0f28');
+  X.fillStyle=bg; X.fill();
+  X.strokeStyle=`rgba(120,150,210,${0.28+L*0.3})`; X.lineWidth=1.2; X.stroke();
+  for(let i=1;i<11;i++){ const yy=base-(i/11)*towerH, hw=lerp(wB,wT,i/11); X.beginPath(); X.moveTo(cx-hw,yy); X.lineTo(cx+hw,yy); X.strokeStyle='rgba(80,100,150,0.1)'; X.lineWidth=0.6; X.stroke(); }
+
+  // glowing vines wrapping the tower
+  for(let v=0;v<2;v++){
+    const dir=v?1:-1;
+    X.beginPath();
+    for(let s=0;s<=12;s++){ const yy=base-(s/12)*towerH, hw=lerp(wB,wT,s/12), xx=cx+dir*hw*0.92+Math.sin(s*0.9)*hw*0.1; s?X.lineTo(xx,yy):X.moveTo(xx,yy); }
+    X.strokeStyle=`rgba(${['95,247,255','180,120,255'][v]},${0.28+L*0.3})`; X.lineWidth=1.6; X.stroke();
+    for(let s=1;s<12;s+=2){ const yy=base-(s/12)*towerH, hw=lerp(wB,wT,s/12), xx=cx+dir*hw*0.92+Math.sin(s*0.9)*hw*0.1, p=0.5+Math.abs(Math.sin(t*1.4+s+v))*0.5; X.beginPath(); X.arc(xx,yy,2.2*p,0,Math.PI*2); X.fillStyle=`rgba(${['120,255,235','200,150,255'][v]},${0.8*p})`; X.fill(); }
   }
-  // branch crown
-  for(let b=0;b<5;b++){
-    const dir=b%2?1:-1, top=baseY-Hh*0.86;
-    X.beginPath(); X.moveTo(lx+dir*Ww*0.1,top);
-    X.quadraticCurveTo(lx+dir*Ww*0.6,top-Hh*0.05,lx+dir*Ww*(0.9+b*0.12),top-Hh*0.16-b*Hh*0.03);
-    X.strokeStyle=`rgba(90,200,220,${0.3+state.lit*0.4})`; X.lineWidth=2; X.lineCap='round'; X.stroke();
-  }
+
+  // gothic arched doorway/window — warm amber glow
+  const dW=wT*1.05, dBotY=base-towerH*0.02, dTopY=base-towerH*0.4, archTop=dTopY-dW*0.55;
+  const wglow=0.45+L*0.4+state.door*0.4;
+  const wgr=X.createRadialGradient(cx,(dTopY+dBotY)/2,0,cx,(dTopY+dBotY)/2,dW*1.7);
+  wgr.addColorStop(0,`rgba(255,215,140,${wglow})`); wgr.addColorStop(.5,`rgba(255,180,110,${wglow*0.4})`); wgr.addColorStop(1,'rgba(0,0,0,0)');
+  X.beginPath(); X.arc(cx,(dTopY+dBotY)/2,dW*1.7,0,Math.PI*2); X.fillStyle=wgr; X.fill();
+  function arch(){ X.beginPath(); X.moveTo(cx-dW*0.5,dBotY); X.lineTo(cx-dW*0.5,dTopY); X.quadraticCurveTo(cx-dW*0.5,archTop,cx,archTop-dW*0.08); X.quadraticCurveTo(cx+dW*0.5,archTop,cx+dW*0.5,dTopY); X.lineTo(cx+dW*0.5,dBotY); X.closePath(); }
+  arch();
+  const wf=X.createLinearGradient(cx,archTop,cx,dBotY);
+  wf.addColorStop(0,'rgba(255,236,182,0.92)'); wf.addColorStop(.6,'rgba(255,196,120,0.85)'); wf.addColorStop(1,'rgba(228,150,88,0.78)');
+  X.fillStyle=wf; X.fill();
+  X.strokeStyle='rgba(36,34,54,0.85)'; X.lineWidth=2; X.stroke();
+  X.save(); arch(); X.clip();
+  for(let i=1;i<4;i++){ const mx=cx-dW*0.5+i/4*dW; X.beginPath(); X.moveTo(mx,dBotY); X.lineTo(mx,archTop); X.strokeStyle='rgba(48,42,58,0.7)'; X.lineWidth=1.5; X.stroke(); }
+  for(let i=1;i<5;i++){ const my=dBotY-(i/5)*(dBotY-dTopY); X.beginPath(); X.moveTo(cx-dW*0.5,my); X.lineTo(cx+dW*0.5,my); X.strokeStyle='rgba(48,42,58,0.5)'; X.lineWidth=1.2; X.stroke(); }
+  X.restore();
+
   // lantern room
-  const lyTop=baseY-Hh*0.86;
-  X.beginPath();
-  X.moveTo(lx-Ww*0.42,lyTop);
-  X.lineTo(lx-Ww*0.3,lyTop-Hh*0.16);
-  X.lineTo(lx+Ww*0.3,lyTop-Hh*0.16);
-  X.lineTo(lx+Ww*0.42,lyTop);
-  X.closePath();
-  X.fillStyle=`rgba(120,220,240,${0.06+state.lit*0.22})`;
-  X.strokeStyle=`rgba(140,235,245,${0.35+state.lit*0.45})`; X.lineWidth=1.2; X.fill(); X.stroke();
-  // spire + crowning atom
-  const spY=lyTop-Hh*0.16;
-  X.beginPath(); X.moveTo(lx-Ww*0.18,spY); X.lineTo(lx,spY-Hh*0.14); X.lineTo(lx+Ww*0.18,spY); X.closePath();
-  X.fillStyle=`rgba(110,210,230,${0.2+state.lit*0.4})`; X.strokeStyle=`rgba(150,235,245,${0.4+state.lit*0.4})`; X.lineWidth=1; X.fill(); X.stroke();
+  const lrW=wT*1.05, lrH=towerH*0.15, lrY=top;
+  X.beginPath(); X.rect(cx-lrW,lrY-3,lrW*2,5); X.fillStyle='rgba(28,34,58,0.95)'; X.fill();
+  X.beginPath(); X.rect(cx-lrW*0.8,lrY-lrH,lrW*1.6,lrH); X.fillStyle=`rgba(255,242,205,${0.3+L*0.55})`; X.fill();
+  X.strokeStyle='rgba(38,44,68,0.92)'; X.lineWidth=2; X.stroke();
+  for(let i=1;i<5;i++){ const mx=cx-lrW*0.8+i/5*lrW*1.6; X.beginPath(); X.moveTo(mx,lrY); X.lineTo(mx,lrY-lrH); X.strokeStyle='rgba(38,44,68,0.8)'; X.lineWidth=1.4; X.stroke(); }
+  X.beginPath(); X.moveTo(cx-lrW*0.8,lrY-lrH); X.quadraticCurveTo(cx,lrY-lrH*2.3,cx+lrW*0.8,lrY-lrH); X.closePath();
+  X.fillStyle='rgba(24,30,52,0.95)'; X.fill(); X.strokeStyle='rgba(120,150,210,0.4)'; X.lineWidth=1; X.stroke();
+  X.beginPath(); X.moveTo(cx,lrY-lrH*2.3); X.lineTo(cx,lrY-lrH*2.9); X.strokeStyle='rgba(150,180,220,0.55)'; X.lineWidth=1.5; X.stroke();
 
-  // ── rising energy band (light traveling up the tower during ignition) ──
-  if(state.rise>0 && state.rise<1){
-    const ry=baseY-state.rise*Hh*0.84;
-    const rb=X.createLinearGradient(0,ry-16,0,ry+16);
-    rb.addColorStop(0,'rgba(200,250,255,0)'); rb.addColorStop(.5,'rgba(210,252,255,0.55)'); rb.addColorStop(1,'rgba(200,250,255,0)');
-    X.fillStyle=rb; X.fillRect(lx-Ww*0.5,ry-16,Ww,32);
+  // lantern light + beam (golden-white)
+  const lampY=lrY-lrH*0.5, halo=X.createRadialGradient(cx,lampY,0,cx,lampY,lrW*(1.6+L*2.4));
+  halo.addColorStop(0,`rgba(255,250,225,${0.4+L*0.55})`); halo.addColorStop(.3,`rgba(255,235,180,${0.2+L*0.3})`); halo.addColorStop(1,'rgba(0,0,0,0)');
+  X.beginPath(); X.arc(cx,lampY,lrW*(1.6+L*2.4),0,Math.PI*2); X.fillStyle=halo; X.fill();
+  const B=Math.max(L*0.5,state.beam);
+  if(B>0.01){
+    const sb=X.createLinearGradient(cx,lampY,cx+W*0.2,-H*0.1);
+    sb.addColorStop(0,`rgba(255,248,220,${0.42*B})`); sb.addColorStop(.6,`rgba(255,235,180,${0.12*B})`); sb.addColorStop(1,'rgba(255,230,170,0)');
+    const bw=lrW*(0.5+B);
+    X.beginPath(); X.moveTo(cx-bw,lampY); X.lineTo(cx+bw,lampY); X.lineTo(cx+bw*2+W*0.18,-H*0.12); X.lineTo(cx-bw*2+W*0.18,-H*0.12); X.closePath(); X.fillStyle=sb; X.fill();
   }
-
-  // ── lantern light (controlled by state.lit) ──
-  if(state.lit>0.001){
-    const cx=lx, cy=lyTop-Hh*0.08, L=state.lit;
-    // beam crossing the sky (light, not fire)
-    if(state.beam>0){
-      const B=state.beam;
-      const sb=X.createLinearGradient(cx,cy,cx-W*0.22,-H*0.15);
-      sb.addColorStop(0,`rgba(225,252,255,${0.5*B})`); sb.addColorStop(.6,`rgba(140,225,255,${0.16*B})`); sb.addColorStop(1,'rgba(120,210,255,0)');
-      const bw=Ww*(0.45+B*0.9);
-      X.beginPath();
-      X.moveTo(cx-bw,cy); X.lineTo(cx+bw,cy);
-      X.lineTo(cx+bw*2.2-W*0.16,-H*0.12); X.lineTo(cx-bw*2.2-W*0.16,-H*0.12);
-      X.closePath(); X.fillStyle=sb; X.fill();
-    }
-    // glow halo
-    const gr=Ww*(1.4+L*1.2);
-    const gg=X.createRadialGradient(cx,cy,0,cx,cy,gr);
-    gg.addColorStop(0,`rgba(255,255,250,${0.95*L})`);
-    gg.addColorStop(.25,`rgba(170,250,255,${0.7*L})`);
-    gg.addColorStop(.55,`rgba(110,210,255,${0.3*L})`);
-    gg.addColorStop(1,'rgba(0,0,0,0)');
-    X.beginPath(); X.arc(cx,cy,gr,0,Math.PI*2); X.fillStyle=gg; X.fill();
-    // rotating beams
-    X.save(); X.translate(cx,cy);
-    for(let k=0;k<3;k++){
-      const ang=t*0.5+k*Math.PI*2/3;
-      X.save(); X.rotate(ang);
-      const bg=X.createLinearGradient(0,0,W*0.9,0);
-      bg.addColorStop(0,`rgba(190,245,255,${0.22*L})`); bg.addColorStop(1,'rgba(0,0,0,0)');
-      X.beginPath(); X.moveTo(0,0); X.lineTo(W*0.9,-H*0.07); X.lineTo(W*0.9,H*0.07); X.closePath();
-      X.fillStyle=bg; X.fill(); X.restore();
-    }
-    X.restore();
-    // Eureka glowing within (silhouette in the lantern)
-    if(L>0.35){
-      const ia=(L-0.35)/0.65;
-      drawEureka(cx,lyTop-Hh*0.02,0.42,t,0,ia*0.9,true);
-    }
-    // ground reflection
-    const rg=X.createLinearGradient(cx,baseY,cx,baseY+H*0.16);
-    rg.addColorStop(0,`rgba(140,230,255,${0.18*L})`); rg.addColorStop(1,'rgba(0,0,0,0)');
-    X.fillStyle=rg; X.fillRect(cx-Ww*1.5,baseY,Ww*3,H*0.16);
-  }
+  if(state.rise>0 && state.rise<1){ const ry=base-state.rise*towerH, hw=lerp(wB,wT,state.rise), rb=X.createLinearGradient(0,ry-16,0,ry+16); rb.addColorStop(0,'rgba(200,250,255,0)'); rb.addColorStop(.5,'rgba(210,252,255,0.5)'); rb.addColorStop(1,'rgba(200,250,255,0)'); X.fillStyle=rb; X.fillRect(cx-hw,ry-16,hw*2,32); }
   X.restore();
 }
 
@@ -928,73 +928,63 @@ function drawEureka(x,groundY,scale,t,walkPh,alpha,interior){
 let T=0, lastFootR=-9, lastFootL=-9;
 function render(){
   T+=0.016;
-  // sky
+  // sky — indigo to violet with magenta horizon
   const sky=X.createLinearGradient(0,0,0,H);
-  sky.addColorStop(0,'#020a16'); sky.addColorStop(.42,'#031826'); sky.addColorStop(.72,'#02101e'); sky.addColorStop(1,'#01060f');
+  sky.addColorStop(0,'#080626'); sky.addColorStop(.3,'#161046'); sky.addColorStop(.5,'#321a5a'); sky.addColorStop(.6,'#5a2360'); sky.addColorStop(.7,'#241640'); sky.addColorStop(1,'#06040f');
   X.fillStyle=sky; X.fillRect(0,0,W,H);
-  // far mist orbs
-  glowfar.forEach(o=>{
-    const p=0.5+Math.sin(T*0.4+o.ph)*0.5;
-    const g=X.createRadialGradient(o.x,o.y,0,o.x,o.y,o.r);
-    g.addColorStop(0,`rgba(${o.c},${0.10*p})`); g.addColorStop(1,'rgba(0,0,0,0)');
-    X.beginPath(); X.arc(o.x,o.y,o.r,0,Math.PI*2); X.fillStyle=g; X.fill();
-  });
-  // trees back->front
-  trees.forEach(tr=>drawTree(tr,T));
-  // glowing river/ground band
-  const rv=X.createLinearGradient(0,GROUND-6,0,H);
-  rv.addColorStop(0,'rgba(60,180,200,0.10)'); rv.addColorStop(.25,'rgba(40,130,170,0.16)'); rv.addColorStop(1,'rgba(2,10,20,0.0)');
-  X.fillStyle=rv; X.fillRect(0,GROUND-6,W,H-GROUND+6);
-  const GD=SMALL?13:26;
-  for(let i=0;i<GD;i++){
-    const gx=(i/GD)*W+Math.sin(T*0.5+i)*10, gy=GROUND+8+((i*53)%Math.max(1,(H-GROUND-12)));
-    const p=0.4+Math.abs(Math.sin(T*1.5+i))*0.6;
-    X.beginPath(); X.arc(gx,gy,1.4*p,0,Math.PI*2);
-    X.fillStyle=`rgba(${['120,255,235','150,220,255','190,160,255'][i%3]},${0.5*p})`; X.fill();
-  }
-  // lighthouse
+  // nebula
+  const neb=X.createRadialGradient(W*0.62,H*0.22,0,W*0.62,H*0.22,W*0.55);
+  neb.addColorStop(0,'rgba(150,90,220,0.16)'); neb.addColorStop(.5,'rgba(90,70,200,0.07)'); neb.addColorStop(1,'rgba(0,0,0,0)');
+  X.fillStyle=neb; X.fillRect(0,0,W,H*0.7);
+  // magenta horizon glow
+  const hg=X.createRadialGradient(W*0.55,TBASE,0,W*0.55,TBASE,W*0.6);
+  hg.addColorStop(0,'rgba(255,120,180,0.16)'); hg.addColorStop(.5,'rgba(170,80,190,0.07)'); hg.addColorStop(1,'rgba(0,0,0,0)');
+  X.fillStyle=hg; X.fillRect(0,H*0.3,W,H*0.5);
+  // stars
+  stars.forEach(s=>{ s.ph+=0.02; const o=(s.neb?0.4:0.2)+Math.abs(Math.sin(s.ph))*(s.neb?0.6:0.5);
+    X.beginPath(); X.arc(s.x,s.y,s.r,0,Math.PI*2); X.fillStyle=`rgba(${s.neb?'220,200,255':'200,220,255'},${o})`; X.fill(); });
+  // giant glow-trees
+  bigtrees.forEach(tr=>drawGlowTree(tr,T));
+  // dark forest floor
+  const fl=X.createLinearGradient(0,TBASE-H*0.02,0,H);
+  fl.addColorStop(0,'rgba(8,10,26,0)'); fl.addColorStop(.18,'rgba(7,9,22,0.85)'); fl.addColorStop(1,'rgba(4,6,16,1)');
+  X.fillStyle=fl; X.fillRect(0,TBASE-H*0.02,W,H-(TBASE-H*0.02));
+  // lighthouse + path
   drawLighthouse(T);
-  // floating spores
-  spores.forEach(s=>{
-    s.y-=s.sp; s.x+=Math.sin(T*0.7+s.drift)*0.3;
-    if(s.y<-6){s.y=H+6;s.x=Math.random()*W;}
-    const tw=0.4+Math.abs(Math.sin(T*1.6+s.drift))*0.6;
-    const g=X.createRadialGradient(s.x,s.y,0,s.x,s.y,s.r*4);
-    g.addColorStop(0,`rgba(${s.c},${0.7*tw})`); g.addColorStop(1,'rgba(0,0,0,0)');
-    X.beginPath(); X.arc(s.x,s.y,s.r*4,0,Math.PI*2); X.fillStyle=g; X.fill();
-    X.beginPath(); X.arc(s.x,s.y,s.r*0.7,0,Math.PI*2); X.fillStyle=`rgba(${s.c},${tw})`; X.fill();
-  });
+  drawPath();
+  // foreground neon foliage
+  foliage.forEach(f=>drawFoliage(f,T));
+  // floating orbs
+  orbs.forEach(o=>drawOrb(o,T));
+  // drifting spores
+  spores.forEach(s=>{ s.y-=s.sp; s.x+=Math.sin(T*0.7+s.drift)*0.3; if(s.y<-6){s.y=H+6;s.x=Math.random()*W;}
+    const tw=0.4+Math.abs(Math.sin(T*1.6+s.drift))*0.6; const g=X.createRadialGradient(s.x,s.y,0,s.x,s.y,s.r*4);
+    g.addColorStop(0,`rgba(${s.c},${0.7*tw})`); g.addColorStop(1,'rgba(0,0,0,0)'); X.beginPath(); X.arc(s.x,s.y,s.r*4,0,Math.PI*2); X.fillStyle=g; X.fill();
+    X.beginPath(); X.arc(s.x,s.y,s.r*0.7,0,Math.PI*2); X.fillStyle=`rgba(${s.c},${tw})`; X.fill(); });
   // footstep ripples + nature-waking blooms
   ripples=ripples.filter(r=>r.life>0);
   ripples.forEach(r=>{ r.life-=0.02; r.rad+=1.6;
-    if(r.bloom){
-      const bg=X.createRadialGradient(r.x,r.y,0,r.x,r.y,r.rad*2.4);
-      bg.addColorStop(0,`rgba(150,255,220,${r.life*0.4})`); bg.addColorStop(1,'rgba(0,0,0,0)');
-      X.beginPath(); X.arc(r.x,r.y,r.rad*2.4,0,Math.PI*2); X.fillStyle=bg; X.fill();
-    }
-    X.beginPath(); X.ellipse(r.x,r.y,r.rad,r.rad*0.32,0,0,Math.PI*2);
-    X.strokeStyle=`rgba(140,245,255,${r.life*0.5})`; X.lineWidth=1.4; X.stroke(); });
-  // onboarding atom (consciousness before it becomes a being)
+    if(r.bloom){ const bg=X.createRadialGradient(r.x,r.y,0,r.x,r.y,r.rad*2.4); bg.addColorStop(0,`rgba(150,255,220,${r.life*0.4})`); bg.addColorStop(1,'rgba(0,0,0,0)'); X.beginPath(); X.arc(r.x,r.y,r.rad*2.4,0,Math.PI*2); X.fillStyle=bg; X.fill(); }
+    X.beginPath(); X.ellipse(r.x,r.y,r.rad,r.rad*0.32,0,0,Math.PI*2); X.strokeStyle=`rgba(140,245,255,${r.life*0.5})`; X.lineWidth=1.4; X.stroke(); });
+  // onboarding atom
   if(state.atomA>0.001) drawAtom(X,state.atomX,state.atomY,SMALL?46:64,T,1,state.atomA);
-  // Eureka walking (onboard)
+  // the being — perspective walk up the path, with reflection
   if(state.showChar){
-    const wp=state.walk;
-    drawEureka(state.charX,GROUND,1,T,wp,state.charAlpha,false);
+    const gy=state.charY||GROUND, sca=state.charScale||1, wp=state.walk;
+    X.save(); X.translate(0,2*gy); X.scale(1,-1); drawEureka(state.charX,gy,sca,T,wp,state.charAlpha*0.16,false); X.restore();
+    drawEureka(state.charX,gy,sca,T,wp,state.charAlpha,false);
     if(state.charAlpha>0.5){
       const sr=Math.sin(wp), sl=Math.sin(wp+2.1);
-      if(sr<-0.92 && lastFootR>=-0.92) ripples.push({x:state.charX+18,y:GROUND,rad:4,life:1});
-      if(sl<-0.92 && lastFootL>=-0.92) ripples.push({x:state.charX-14,y:GROUND,rad:4,life:1});
+      if(sr<-0.92 && lastFootR>=-0.92) ripples.push({x:state.charX+18*sca,y:gy,rad:4,life:1});
+      if(sl<-0.92 && lastFootL>=-0.92) ripples.push({x:state.charX-14*sca,y:gy,rad:4,life:1});
       lastFootR=sr; lastFootL=sl;
-      // the walk wakes the forest: light blooms in its wake
-      if(Math.random()<0.3) ripples.push({x:state.charX+(Math.random()-0.5)*70,y:GROUND+Math.random()*12,rad:2,life:1,bloom:true});
+      if(Math.random()<0.3) ripples.push({x:state.charX+(Math.random()-0.5)*70*sca,y:gy+Math.random()*12,rad:2,life:1,bloom:true});
     }
   }
-  // flash
+  // flash (warm)
   if(state.flash>0.001){
-    const fg=X.createRadialGradient(W*0.8,H*0.34,0,W*0.8,H*0.34,Math.max(W,H));
-    fg.addColorStop(0,`rgba(235,255,255,${state.flash})`);
-    fg.addColorStop(.4,`rgba(160,245,255,${state.flash*0.8})`);
-    fg.addColorStop(1,`rgba(120,210,255,${state.flash*0.3})`);
+    const fg=X.createRadialGradient(LX,TBASE-H*0.2,0,LX,TBASE-H*0.2,Math.max(W,H));
+    fg.addColorStop(0,`rgba(255,250,235,${state.flash})`); fg.addColorStop(.4,`rgba(255,235,190,${state.flash*0.8})`); fg.addColorStop(1,`rgba(230,190,150,${state.flash*0.25})`);
     X.fillStyle=fg; X.fillRect(0,0,W,H);
   }
   requestAnimationFrame(render);
@@ -1111,8 +1101,9 @@ function startOnboard(name){
     document.getElementById('screen-onboard').classList.remove('hidden');
     onbT=0; entered=false;
     Object.assign(state,{showChar:false,charAlpha:0,walk:0,lit:0,flash:0,atomA:0,door:0,beam:0,rise:0});
-    startX=W*0.42; doorX=W*0.80;
-    state.atomX=startX; state.atomY=GROUND-100;
+    startX=W*0.40; doorX=LX;
+    state.atomX=W*0.46; state.atomY=H*0.46;
+    state.charX=startX; state.charY=H*0.92; state.charScale=1;
     onbRAF=requestAnimationFrame(animOnboard);
   },650);
 }
@@ -1130,8 +1121,8 @@ function animOnboard(){
     const p=(onbT-1.5)/1.7;
     state.atomA=p<0.35?1:Math.max(0,1-(p-0.35)/0.65);
     state.showChar=true; state.charAlpha=Math.max(0,(p-0.3)/0.7);
-    state.walk=0;
-    if(onbT>1.9 && onbT<2.0) burstBloom(startX,GROUND-100);
+    state.charX=startX; state.charY=H*0.92; state.charScale=1; state.walk=0;
+    if(onbT>1.9 && onbT<2.0) burstBloom(startX,H*0.92-90);
     msgEl.textContent='The atom becomes a being of light';
   }
   // C · 3.2–7.6  walks to the lighthouse, waking the forest
@@ -1139,13 +1130,15 @@ function animOnboard(){
     const p=easeIO((onbT-3.2)/4.4);
     state.atomA=0; state.charAlpha=1;
     state.charX=lerp(startX,doorX,p);
-    state.walk=(onbT-3.2)*7.5;
+    state.charY=lerp(H*0.92,TBASE+H*0.03,p);
+    state.charScale=lerp(1,0.5,p);
+    state.walk=(onbT-3.2)*7.2;
     msgEl.textContent='Eureka walks the forest, waking the world to light';
   }
   // D · 7.6–9.0  the door opens, the being steps inside
   else if(onbT<9.0){
     const p=(onbT-7.6)/1.4;
-    state.charX=doorX; state.walk=(onbT-3.2)*7.5;
+    state.charX=doorX; state.charY=TBASE+H*0.03; state.charScale=0.5; state.walk=(onbT-3.2)*7.2;
     state.door=easeIO(Math.min(1,p*1.2));
     state.charAlpha=Math.max(0,1-p*1.25);
     msgEl.textContent='The door opens — Eureka steps inside';
