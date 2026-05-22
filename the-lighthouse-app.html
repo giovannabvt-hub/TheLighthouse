@@ -57,10 +57,22 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--white);font-fa
 }
 @keyframes cardrise{from{opacity:0;transform:translateY(26px) scale(.97);}to{opacity:1;transform:none;}}
 
-.lc-mark{width:62px;height:62px;margin-bottom:14px;color:var(--cyan);
-  filter:drop-shadow(0 0 10px rgba(95,247,255,0.7)) drop-shadow(0 0 26px rgba(120,255,220,0.4));
-  animation:markpulse 4s ease-in-out infinite;}
-@keyframes markpulse{0%,100%{transform:scale(1);}50%{transform:scale(1.06);}}
+.lc-atom{width:118px;height:118px;margin:-8px 0 6px;position:relative;}
+.lc-atom canvas{width:118px;height:118px;display:block;}
+
+.lc-pick{font-family:'Josefin Sans',sans-serif;font-size:0.5rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(150,235,255,0.4);margin:0 0 10px;text-align:center;}
+.interests{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;width:100%;margin-bottom:18px;}
+.chip{display:flex;align-items:center;gap:6px;padding:7px 13px;border-radius:20px;cursor:none;
+  background:rgba(8,22,34,0.5);border:1px solid rgba(120,220,255,0.16);color:rgba(180,225,255,0.6);
+  font-family:'Josefin Sans',sans-serif;font-size:0.62rem;letter-spacing:0.06em;transition:all .25s ease;}
+.chip .ic{width:13px;height:13px;}
+.chip:hover{border-color:rgba(120,240,255,0.4);color:rgba(200,240,255,0.85);}
+.chip.on{background:rgba(80,225,230,0.14);border-color:rgba(120,245,255,0.6);color:#eafcff;box-shadow:0 0 18px rgba(70,220,230,0.28),inset 0 0 12px rgba(120,255,235,0.08);}
+
+/* global click light-pulse */
+.click-pulse{position:fixed;border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);
+  border:1.5px solid rgba(150,245,255,0.7);box-shadow:0 0 12px rgba(120,240,255,0.5);animation:clickp .6s ease-out forwards;}
+@keyframes clickp{from{opacity:0.85;width:8px;height:8px;}to{opacity:0;width:62px;height:62px;}}
 
 .lc-title{font-family:'Cinzel',serif;font-size:1.55rem;font-weight:900;letter-spacing:0.05em;text-transform:uppercase;
   background:linear-gradient(180deg,#fff 0%,#b9f4ff 45%,#caa6ff 100%);
@@ -298,11 +310,58 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--white);font-fa
 .ca-d{font-size:9px;color:rgba(190,225,255,0.32);line-height:1.4;}
 .ca-pts{display:inline-block;margin-top:8px;font-size:8px;padding:3px 9px;border-radius:6px;background:rgba(62,233,180,0.09);color:#9bffe0;border:1px solid rgba(62,233,180,0.2);font-family:'Josefin Sans',sans-serif;letter-spacing:0.05em;}
 
-@media(max-width:640px){
+/* touch / no-hover devices: use native pointer, hide spore cursor */
+@media(hover:none),(pointer:coarse){
+  html,body{cursor:auto;}
+  #cursor{display:none;}
+  input,.chat-inp{font-size:16px;} /* prevent iOS zoom-on-focus */
+}
+
+@media(max-width:820px){
+  .sidenav{width:62px;}
+  .nav-label{display:none;}
+  .nav-item{width:52px;padding:11px 4px;}
+  .content-area{padding:18px 16px;}
+  .tb-center{display:none;}
+  .tb-name{white-space:nowrap;font-size:0.78rem;}
   .stats-row{grid-template-columns:repeat(2,1fr);}
-  .chat-layout{grid-template-columns:1fr;}
-  .sidenav{width:60px;}.nav-label{display:none;}
+  .chat-layout{grid-template-columns:1fr;height:auto;}
+  .chat-win{min-height:62vh;}
   .ca-grid{grid-template-columns:repeat(2,1fr);}
+  .course-grid{grid-template-columns:repeat(2,1fr);}
+}
+
+@media(max-width:560px){
+  .topbar{padding:9px 14px;}
+  .tb-logo .ic{width:24px;height:24px;}
+  .tb-name{font-size:0.72rem;letter-spacing:0.1em;}
+  .content-area{padding:14px 12px;}
+  .pg-title{font-size:1.18rem;}
+  .stat-card{padding:13px;}
+  .stat-val{font-size:1.4rem;}
+  .stat-lbl{padding-right:22px;}
+  .rec-grid{grid-template-columns:repeat(2,1fr);gap:9px;}
+  .lib-grid{grid-template-columns:repeat(2,1fr);gap:10px;}
+  .course-grid{grid-template-columns:1fr;}
+  .edu-hero{flex-direction:column;text-align:center;gap:12px;padding:18px;}
+  .contrib-banner{flex-direction:column;align-items:flex-start;gap:16px;}
+  .badges-wrap{flex-wrap:wrap;}
+  .ca-grid{grid-template-columns:repeat(2,1fr);}
+  .login-card{padding:30px 22px 26px;}
+  .login-btn{letter-spacing:0.18em;font-size:0.68rem;padding:13px;white-space:nowrap;}
+  .lc-hint{letter-spacing:0.1em;}
+  /* now-playing: compact single row */
+  .np-inner{gap:9px;padding:10px 12px;}
+  .np-wave{display:none;}
+  .np-title,.np-artist{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .np-ctrl{gap:9px;}
+  .now-playing{padding-top:10px;}
+}
+
+@media(max-width:380px){
+  .stats-row{gap:8px;}
+  .sidenav{width:54px;}
+  .nav-item{width:46px;}
 }
 </style>
 </head>
@@ -356,25 +415,32 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--white);font-fa
 <!-- ══ SCREEN 1 — LOGIN ══ -->
 <div class="screen" id="screen-login">
   <form class="login-card" id="login-card" autocomplete="off">
-    <svg class="lc-mark"><use href="#ic-observatory"/></svg>
+    <div class="lc-atom"><canvas id="reg-atom" width="118" height="118"></canvas></div>
     <div class="lc-title">The Lighthouse</div>
-    <div class="lc-sub">Illuminate · Collect · Connect</div>
+    <div class="lc-sub">Become · Awaken · Enter</div>
     <div class="field" id="f-user">
-      <input id="in-user" type="text" placeholder="Explorer name" autocomplete="off"/>
+      <input id="in-user" type="text" placeholder="Choose your name" autocomplete="off"/>
       <svg class="fic ic"><use href="#ic-sprout"/></svg>
     </div>
     <div class="field" id="f-pass">
-      <input id="in-pass" type="password" placeholder="Passphrase" autocomplete="off"/>
+      <input id="in-pass" type="password" placeholder="Set a passphrase" autocomplete="off"/>
       <svg class="fic ic"><use href="#ic-spark"/></svg>
     </div>
-    <button class="login-btn" type="submit" id="btn-login">Enter the Lighthouse</button>
-    <div class="lc-hint">Any name &amp; passphrase opens the forest</div>
+    <div class="lc-pick">What calls to you?</div>
+    <div class="interests" id="interests">
+      <button type="button" class="chip" data-i="music"><svg class="ic"><use href="#ic-note"/></svg>Music</button>
+      <button type="button" class="chip" data-i="knowledge"><svg class="ic"><use href="#ic-book"/></svg>Knowledge</button>
+      <button type="button" class="chip" data-i="community"><svg class="ic"><use href="#ic-orbit"/></svg>Community</button>
+      <button type="button" class="chip" data-i="nature"><svg class="ic"><use href="#ic-leaf"/></svg>Nature</button>
+    </div>
+    <button class="login-btn" type="submit" id="btn-login">Awaken &amp; Enter</button>
+    <div class="lc-hint">Your atom becomes your light</div>
   </form>
 </div>
 
 <!-- ══ SCREEN 2 — ONBOARD ══ -->
 <div class="screen hidden" id="screen-onboard">
-  <div id="onboard-msg">A light-being stirs in the forest…</div>
+  <div id="onboard-msg">An atom drifts in the dark…</div>
 </div>
 
 <!-- ══ SCREEN 3 — DASHBOARD ══ -->
@@ -582,26 +648,31 @@ document.addEventListener('mousemove',e=>{cursorEl.style.left=e.clientX+'px';cur
 ═══════════════════════════════════════════════ */
 const sc=document.getElementById('scene'), X=sc.getContext('2d');
 let W,H,GROUND;
-const state={lit:0, showChar:false, charX:0, charAlpha:0, walk:0, flash:0};
+const state={lit:0, showChar:false, charX:0, charAlpha:0, walk:0, flash:0,
+  atomA:0, atomX:0, atomY:0, door:0, beam:0, rise:0};
 
-let trees=[], spores=[], glowfar=[], ripples=[];
+let trees=[], spores=[], glowfar=[], ripples=[], SMALL=false;
 function build(){
   W=sc.width=window.innerWidth; H=sc.height=window.innerHeight; GROUND=H*0.80;
+  SMALL = W<760;
   trees=[]; spores=[]; glowfar=[];
   // far soft light orbs (mist lanterns)
-  for(let i=0;i<7;i++) glowfar.push({x:Math.random()*W,y:H*0.2+Math.random()*H*0.42,r:60+Math.random()*120,
+  const gN=SMALL?4:7;
+  for(let i=0;i<gN;i++) glowfar.push({x:Math.random()*W,y:H*0.2+Math.random()*H*0.42,r:60+Math.random()*120,
     c:['80,230,235','150,120,255','255,110,200','90,255,200'][i%4],ph:Math.random()*6});
   // tree layers (back -> front)
   const layers=[{n:6,sc:.55,a:.35,col:'8,28,40'},{n:5,sc:.8,a:.55,col:'6,22,34'},{n:4,sc:1.15,a:.85,col:'3,14,24'}];
   layers.forEach((L,li)=>{
-    for(let i=0;i<L.n;i++){
-      const x=(i+0.5)/L.n*W + (Math.random()-0.5)*W/L.n*0.6;
+    const n=SMALL?Math.max(2,Math.round(L.n*0.55)):L.n;
+    for(let i=0;i<n;i++){
+      const x=(i+0.5)/n*W + (Math.random()-0.5)*W/n*0.6;
       trees.push({x, base:GROUND+li*14, h:(H*0.5+Math.random()*H*0.28)*L.sc, w:(28+Math.random()*26)*L.sc,
         a:L.a, col:L.col, hue:['95,247,255','62,233,209','180,120,255','255,95,206'][Math.floor(Math.random()*4)],
-        sway:Math.random()*6, branches:3+Math.floor(Math.random()*3)});
+        sway:Math.random()*6, branches:SMALL?3:3+Math.floor(Math.random()*3)});
     }
   });
-  for(let i=0;i<90;i++) spores.push({x:Math.random()*W,y:Math.random()*H,r:0.6+Math.random()*2.2,
+  const spN=SMALL?42:90;
+  for(let i=0;i<spN;i++) spores.push({x:Math.random()*W,y:Math.random()*H,r:0.6+Math.random()*2.2,
     sp:0.15+Math.random()*0.5,drift:Math.random()*Math.PI*2,
     c:['120,255,235','170,150,255','255,140,215','150,235,255'][Math.floor(Math.random()*4)]});
 }
@@ -668,6 +739,21 @@ function drawLighthouse(t){
   tg.addColorStop(0,'rgba(20,55,75,0.55)'); tg.addColorStop(1,'rgba(40,90,120,0.32)');
   X.fillStyle=tg; X.fill();
   X.strokeStyle=`rgba(110,225,235,${0.25+state.lit*0.5})`; X.lineWidth=1.4; X.stroke();
+  // ── doorway at the base (opens during entry) ──
+  const dw=Ww*0.36, dh=Hh*0.2;
+  X.beginPath();
+  X.moveTo(lx-dw*0.5,baseY);
+  X.lineTo(lx-dw*0.5,baseY-dh*0.6);
+  X.quadraticCurveTo(lx,baseY-dh*1.05,lx+dw*0.5,baseY-dh*0.6);
+  X.lineTo(lx+dw*0.5,baseY);
+  X.closePath();
+  X.fillStyle='rgba(6,18,30,0.6)';
+  X.strokeStyle=`rgba(140,235,245,${0.3+state.lit*0.5})`; X.lineWidth=1.1; X.fill(); X.stroke();
+  if(state.door>0){
+    const dO=state.door, dgr=X.createRadialGradient(lx,baseY-dh*0.5,0,lx,baseY-dh*0.5,dh*1.2);
+    dgr.addColorStop(0,`rgba(255,255,250,${0.92*dO})`); dgr.addColorStop(.4,`rgba(165,245,255,${0.6*dO})`); dgr.addColorStop(1,'rgba(0,0,0,0)');
+    X.beginPath(); X.ellipse(lx,baseY-dh*0.5,dw*0.5*dO+5,dh*0.62,0,0,Math.PI*2); X.fillStyle=dgr; X.fill();
+  }
   // bioluminescent veins climbing the tower
   for(let v=0;v<5;v++){
     const off=(v/4-0.5)*Ww*0.7;
@@ -702,9 +788,28 @@ function drawLighthouse(t){
   X.beginPath(); X.moveTo(lx-Ww*0.18,spY); X.lineTo(lx,spY-Hh*0.14); X.lineTo(lx+Ww*0.18,spY); X.closePath();
   X.fillStyle=`rgba(110,210,230,${0.2+state.lit*0.4})`; X.strokeStyle=`rgba(150,235,245,${0.4+state.lit*0.4})`; X.lineWidth=1; X.fill(); X.stroke();
 
+  // ── rising energy band (light traveling up the tower during ignition) ──
+  if(state.rise>0 && state.rise<1){
+    const ry=baseY-state.rise*Hh*0.84;
+    const rb=X.createLinearGradient(0,ry-16,0,ry+16);
+    rb.addColorStop(0,'rgba(200,250,255,0)'); rb.addColorStop(.5,'rgba(210,252,255,0.55)'); rb.addColorStop(1,'rgba(200,250,255,0)');
+    X.fillStyle=rb; X.fillRect(lx-Ww*0.5,ry-16,Ww,32);
+  }
+
   // ── lantern light (controlled by state.lit) ──
   if(state.lit>0.001){
     const cx=lx, cy=lyTop-Hh*0.08, L=state.lit;
+    // beam crossing the sky (light, not fire)
+    if(state.beam>0){
+      const B=state.beam;
+      const sb=X.createLinearGradient(cx,cy,cx-W*0.22,-H*0.15);
+      sb.addColorStop(0,`rgba(225,252,255,${0.5*B})`); sb.addColorStop(.6,`rgba(140,225,255,${0.16*B})`); sb.addColorStop(1,'rgba(120,210,255,0)');
+      const bw=Ww*(0.45+B*0.9);
+      X.beginPath();
+      X.moveTo(cx-bw,cy); X.lineTo(cx+bw,cy);
+      X.lineTo(cx+bw*2.2-W*0.16,-H*0.12); X.lineTo(cx-bw*2.2-W*0.16,-H*0.12);
+      X.closePath(); X.fillStyle=sb; X.fill();
+    }
     // glow halo
     const gr=Ww*(1.4+L*1.2);
     const gg=X.createRadialGradient(cx,cy,0,cx,cy,gr);
@@ -840,8 +945,9 @@ function render(){
   const rv=X.createLinearGradient(0,GROUND-6,0,H);
   rv.addColorStop(0,'rgba(60,180,200,0.10)'); rv.addColorStop(.25,'rgba(40,130,170,0.16)'); rv.addColorStop(1,'rgba(2,10,20,0.0)');
   X.fillStyle=rv; X.fillRect(0,GROUND-6,W,H-GROUND+6);
-  for(let i=0;i<26;i++){
-    const gx=(i/26)*W+Math.sin(T*0.5+i)*10, gy=GROUND+8+((i*53)%Math.max(1,(H-GROUND-12)));
+  const GD=SMALL?13:26;
+  for(let i=0;i<GD;i++){
+    const gx=(i/GD)*W+Math.sin(T*0.5+i)*10, gy=GROUND+8+((i*53)%Math.max(1,(H-GROUND-12)));
     const p=0.4+Math.abs(Math.sin(T*1.5+i))*0.6;
     X.beginPath(); X.arc(gx,gy,1.4*p,0,Math.PI*2);
     X.fillStyle=`rgba(${['120,255,235','150,220,255','190,160,255'][i%3]},${0.5*p})`; X.fill();
@@ -858,11 +964,18 @@ function render(){
     X.beginPath(); X.arc(s.x,s.y,s.r*4,0,Math.PI*2); X.fillStyle=g; X.fill();
     X.beginPath(); X.arc(s.x,s.y,s.r*0.7,0,Math.PI*2); X.fillStyle=`rgba(${s.c},${tw})`; X.fill();
   });
-  // footstep ripples
+  // footstep ripples + nature-waking blooms
   ripples=ripples.filter(r=>r.life>0);
   ripples.forEach(r=>{ r.life-=0.02; r.rad+=1.6;
+    if(r.bloom){
+      const bg=X.createRadialGradient(r.x,r.y,0,r.x,r.y,r.rad*2.4);
+      bg.addColorStop(0,`rgba(150,255,220,${r.life*0.4})`); bg.addColorStop(1,'rgba(0,0,0,0)');
+      X.beginPath(); X.arc(r.x,r.y,r.rad*2.4,0,Math.PI*2); X.fillStyle=bg; X.fill();
+    }
     X.beginPath(); X.ellipse(r.x,r.y,r.rad,r.rad*0.32,0,0,Math.PI*2);
     X.strokeStyle=`rgba(140,245,255,${r.life*0.5})`; X.lineWidth=1.4; X.stroke(); });
+  // onboarding atom (consciousness before it becomes a being)
+  if(state.atomA>0.001) drawAtom(X,state.atomX,state.atomY,SMALL?46:64,T,1,state.atomA);
   // Eureka walking (onboard)
   if(state.showChar){
     const wp=state.walk;
@@ -872,6 +985,8 @@ function render(){
       if(sr<-0.92 && lastFootR>=-0.92) ripples.push({x:state.charX+18,y:GROUND,rad:4,life:1});
       if(sl<-0.92 && lastFootL>=-0.92) ripples.push({x:state.charX-14,y:GROUND,rad:4,life:1});
       lastFootR=sr; lastFootL=sl;
+      // the walk wakes the forest: light blooms in its wake
+      if(Math.random()<0.3) ripples.push({x:state.charX+(Math.random()-0.5)*70,y:GROUND+Math.random()*12,rad:2,life:1,bloom:true});
     }
   }
   // flash
@@ -910,68 +1025,161 @@ window.switchPanel=function(name){
 /* ═══════════════════════════════════════════════
    LOGIN  →  ONBOARD ANIMATION  →  DASHBOARD
 ═══════════════════════════════════════════════ */
+/* ─── ATOM renderer (cursor / consciousness / identity seed) ─── */
+function drawAtom(ctx,cx,cy,R,t,evolve,alpha){
+  if(alpha<=0) return;
+  ctx.save(); ctx.globalAlpha=alpha;
+  const cols=['255,95,206','95,247,255','180,120,255','62,233,209','255,217,138'];
+  // outer glow
+  const og=ctx.createRadialGradient(cx,cy,0,cx,cy,R*2);
+  og.addColorStop(0,`rgba(150,235,255,${0.16+0.22*evolve})`);
+  og.addColorStop(.5,`rgba(130,160,255,${0.07+0.12*evolve})`);
+  og.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.beginPath(); ctx.arc(cx,cy,R*2,0,Math.PI*2); ctx.fillStyle=og; ctx.fill();
+  // gaseous ribbons (more appear as the atom evolves)
+  const nb=Math.round(1+evolve*4);
+  for(let r=0;r<nb;r++){
+    const sp=0.6+r*0.22, ph=r*1.3;
+    ctx.beginPath();
+    for(let i=0;i<=80;i++){
+      const a=(i/80)*Math.PI*2;
+      const warp=Math.sin(a*3+t*sp+ph)*R*0.26+Math.sin(a*5+t*sp*1.2+ph)*R*0.12;
+      const dr=R*0.5+warp, x=cx+Math.cos(a)*dr, y=cy+Math.sin(a)*dr;
+      i?ctx.lineTo(x,y):ctx.moveTo(x,y);
+    }
+    ctx.closePath();
+    ctx.strokeStyle=`rgba(${cols[r%cols.length]},${0.22+0.4*evolve})`;
+    ctx.lineWidth=R*0.03+0.6; ctx.stroke();
+  }
+  // luminous core
+  const cg=ctx.createRadialGradient(cx,cy,0,cx,cy,R*0.5);
+  cg.addColorStop(0,`rgba(255,255,255,${0.8+0.18*evolve})`);
+  cg.addColorStop(.4,`rgba(190,245,255,${0.35+0.3*evolve})`);
+  cg.addColorStop(1,'rgba(120,180,255,0)');
+  ctx.beginPath(); ctx.arc(cx,cy,R*0.5,0,Math.PI*2); ctx.fillStyle=cg; ctx.fill();
+  // orbit rings + electrons
+  const nr=1+Math.round(evolve*2);
+  for(let o=0;o<nr;o++){
+    const ang=t*(0.6+o*0.3)*(o%2?-1:1)+o;
+    const rx=R*(0.95-o*0.18), ry=R*(0.4+o*0.12);
+    ctx.save(); ctx.translate(cx,cy); ctx.rotate(ang);
+    ctx.beginPath(); ctx.ellipse(0,0,rx,ry,0,0,Math.PI*2);
+    ctx.strokeStyle=`rgba(${cols[o%cols.length]},${0.28+0.4*evolve})`; ctx.lineWidth=1; ctx.stroke();
+    const ex=Math.cos(t*1.6+o)*rx, ey=Math.sin(t*1.6+o)*ry;
+    const eg=ctx.createRadialGradient(ex,ey,0,ex,ey,R*0.13);
+    eg.addColorStop(0,'rgba(255,255,255,0.95)'); eg.addColorStop(1,'rgba(255,255,255,0)');
+    ctx.beginPath(); ctx.arc(ex,ey,R*0.13,0,Math.PI*2); ctx.fillStyle=eg; ctx.fill();
+    ctx.restore();
+  }
+  ctx.restore();
+}
+
+/* ─── registration atom evolves with the form (name → pass → interests) ─── */
+const regAtom=document.getElementById('reg-atom'), regCtx=regAtom.getContext('2d');
+let regEvolve=0.16, regTarget=0.16;
+function computeEvolve(){
+  const u=document.getElementById('in-user').value.trim()?0.34:0;
+  const p=document.getElementById('in-pass').value?0.30:0;
+  const ints=document.querySelectorAll('.chip.on').length;
+  regTarget=Math.min(1,0.16+u+p+ints*0.12);
+}
+(function animReg(){
+  regEvolve+=(regTarget-regEvolve)*0.07;
+  regCtx.clearRect(0,0,regAtom.width,regAtom.height);
+  drawAtom(regCtx,regAtom.width/2,regAtom.height/2,regAtom.width*0.33,performance.now()/1000,regEvolve,1);
+  requestAnimationFrame(animReg);
+})();
+document.querySelectorAll('.chip').forEach(c=>c.addEventListener('click',()=>{c.classList.toggle('on');computeEvolve();}));
+['in-user','in-pass'].forEach(id=>document.getElementById(id).addEventListener('input',computeEvolve));
+
+/* ─── global click light-pulse ─── */
+document.addEventListener('pointerdown',e=>{
+  const d=document.createElement('div'); d.className='click-pulse';
+  d.style.left=e.clientX+'px'; d.style.top=e.clientY+'px';
+  document.body.appendChild(d); setTimeout(()=>d.remove(),650);
+});
+
+/* ═══════════════════════════════════════════════
+   ONBOARDING: atom → being → walk → door → light → home
+═══════════════════════════════════════════════ */
 const msgEl=document.getElementById('onboard-msg');
-let onbT=0, onbRAF=0, entered=false, doorX=0;
+let onbT=0, onbRAF=0, entered=false, doorX=0, startX=0;
 
 function startOnboard(name){
   document.getElementById('screen-login').classList.add('hidden');
   setTimeout(()=>{
     document.getElementById('screen-onboard').classList.remove('hidden');
     onbT=0; entered=false;
-    state.showChar=true; state.charAlpha=0; state.walk=0; state.lit=0; state.flash=0;
-    state.charX=W*0.16;
-    doorX=W*0.80-Math.min(150,W*0.13)*0.55-22;
+    Object.assign(state,{showChar:false,charAlpha:0,walk:0,lit:0,flash:0,atomA:0,door:0,beam:0,rise:0});
+    startX=W*0.42; doorX=W*0.80;
+    state.atomX=startX; state.atomY=GROUND-100;
     onbRAF=requestAnimationFrame(animOnboard);
   },650);
 }
 
 function animOnboard(){
   onbT+=0.016;
-  // 0–1.4  appear
-  if(onbT<1.4){
-    state.charAlpha=Math.min(1,onbT/1.0);
+  const who=window._explorer||'traveller';
+  // A · 0–1.5  the atom materialises (consciousness)
+  if(onbT<1.5){
+    state.atomA=Math.min(1,onbT/1.1);
+    msgEl.textContent='An atom awakens — consciousness, curiosity, energy';
+  }
+  // B · 1.5–3.2  atom becomes a being of light
+  else if(onbT<3.2){
+    const p=(onbT-1.5)/1.7;
+    state.atomA=p<0.35?1:Math.max(0,1-(p-0.35)/0.65);
+    state.showChar=true; state.charAlpha=Math.max(0,(p-0.3)/0.7);
     state.walk=0;
-    msgEl.textContent='A light-being stirs in the forest…';
+    if(onbT>1.9 && onbT<2.0) burstBloom(startX,GROUND-100);
+    msgEl.textContent='The atom becomes a being of light';
   }
-  // 1.4–6.4  walk to the lighthouse
-  else if(onbT<6.4){
-    const p=easeIO((onbT-1.4)/5.0);
-    state.charAlpha=1;
-    state.charX=lerp(W*0.16,doorX,p);
-    state.walk=(onbT-1.4)*7.5;
-    msgEl.textContent='Eureka walks the glowing forest…';
-  }
-  // 6.4–7.6  step into the lighthouse (fade in doorway)
+  // C · 3.2–7.6  walks to the lighthouse, waking the forest
   else if(onbT<7.6){
-    const p=(onbT-6.4)/1.2;
-    state.charX=doorX;
-    state.walk=(onbT-1.4)*7.5;
-    state.charAlpha=1-p;
-    msgEl.textContent='Eureka steps into the Lighthouse…';
+    const p=easeIO((onbT-3.2)/4.4);
+    state.atomA=0; state.charAlpha=1;
+    state.charX=lerp(startX,doorX,p);
+    state.walk=(onbT-3.2)*7.5;
+    msgEl.textContent='Eureka walks the forest, waking the world to light';
   }
-  // 7.6–10.0  the light awakens
-  else if(onbT<10.0){
+  // D · 7.6–9.0  the door opens, the being steps inside
+  else if(onbT<9.0){
+    const p=(onbT-7.6)/1.4;
+    state.charX=doorX; state.walk=(onbT-3.2)*7.5;
+    state.door=easeIO(Math.min(1,p*1.2));
+    state.charAlpha=Math.max(0,1-p*1.25);
+    msgEl.textContent='The door opens — Eureka steps inside';
+  }
+  // E · 9.0–11.4  light floods the structure + beam crosses the sky
+  else if(onbT<11.4){
     state.showChar=false;
-    const p=easeIO(Math.min(1,(onbT-7.6)/2.0));
-    state.lit=p;
-    msgEl.textContent='The Lighthouse awakens…';
+    const p=(onbT-9.0)/2.4;
+    state.lit=easeIO(Math.min(1,p*1.15));
+    state.rise=Math.min(1,p*1.7);
+    state.beam=easeIO(Math.min(1,(p-0.2)/0.8));
+    state.door=Math.max(0,1-p*1.4);
+    msgEl.textContent='Light floods the Lighthouse';
   }
-  // 10.0–11.2  flare → home
-  else if(onbT<11.2){
-    state.lit=1;
-    const p=(onbT-10.0)/1.2;
+  // F · 11.4–12.6  flare → home
+  else if(onbT<12.6){
+    state.lit=1; state.beam=1; state.rise=1;
+    const p=(onbT-11.4)/1.2;
     state.flash=Math.sin(p*Math.PI)*0.96;
-    msgEl.textContent='Welcome home, '+(window._explorer||'Eureka');
-    if(onbT>10.7 && !entered){ entered=true; enterDash(); }
+    msgEl.textContent='Welcome home, '+who;
+    if(onbT>12.0 && !entered){ entered=true; enterDash(); }
   }
   onbRAF=requestAnimationFrame(animOnboard);
+}
+
+function burstBloom(x,y){
+  for(let i=0;i<10;i++) ripples.push({x:x+(Math.random()-0.5)*40,y:y+(Math.random()-0.5)*30,rad:2,life:1,bloom:true});
 }
 
 function enterDash(){
   setTimeout(()=>{
     document.getElementById('screen-onboard').classList.add('hidden');
     document.getElementById('screen-dash').classList.remove('hidden');
-    state.flash=0; state.lit=1;
+    state.flash=0; state.lit=1; state.beam=1; state.door=0;
   },520);
 }
 
