@@ -16,7 +16,11 @@
 <meta property="og:description" content="A sanctuary for the inner life — music, knowledge, community and culture in service of learning and reconnecting with yourself.">
 <meta property="og:url" content="https://www.pharosophia.org/the-lighthouse-app.html">
 <meta property="og:locale" content="en_US">
-<meta name="twitter:card" content="summary">
+<meta property="og:image" content="https://www.pharosophia.org/login-bg.png">
+<meta property="og:image:width" content="1748">
+<meta property="og:image:height" content="982">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.pharosophia.org/login-bg.png">
 <meta name="twitter:title" content="Pharosophia · The Lighthouse">
 <meta name="twitter:description" content="A sanctuary for the inner life — music, knowledge, community and culture.">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=Quicksand:wght@300;400;500;600&family=Josefin+Sans:wght@100;300;400&display=swap" rel="stylesheet">
@@ -58,7 +62,10 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--white);font-fa
 /* ════════════════════════════
    LOGIN SCREEN
 ════════════════════════════ */
-#screen-login{z-index:10;flex-direction:column;}
+#screen-login{z-index:10;flex-direction:column;
+  background-image:url('login-bg.png');
+  background-size:cover;background-position:center center;background-repeat:no-repeat;background-attachment:fixed;}
+#screen-login::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 60%,rgba(1,4,13,0.12) 0%,rgba(1,4,13,0.42) 80%);pointer-events:none;}
 
 .login-card{
   position:relative;z-index:2;width:340px;max-width:88vw;
@@ -455,7 +462,7 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--white);font-fa
 
 <!-- ══ SCREEN 2 — ONBOARD ══ -->
 <div class="screen hidden" id="screen-onboard">
-  <div id="onboard-msg">An atom drifts in the dark…</div>
+  <div id="onboard-msg">Entering Pharosophia…</div>
 </div>
 
 <!-- ══ SCREEN 3 — DASHBOARD ══ -->
@@ -594,7 +601,7 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--white);font-fa
               <div class="msg"><div class="msg-av" style="background:rgba(95,200,255,0.16);color:#9fd6ff;">Y</div><div class="msg-body"><div class="msg-u" style="color:#9fd6ff;">Yuki_Osaka</div><div class="msg-t">Just found a first press of Blue Train at the Shimokitazawa flea market — NM condition!</div><div class="msg-time">14:32</div></div></div>
               <div class="msg"><div class="msg-av" style="background:rgba(255,95,180,0.16);color:#ff9fd0;">M</div><div class="msg-body"><div class="msg-u" style="color:#ff9fd0;">Marco_Roma</div><div class="msg-t">No way! That's incredibly rare. How much did you pay?</div><div class="msg-time">14:33</div></div></div>
               <div class="msg"><div class="msg-av" style="background:rgba(255,210,120,0.16);color:#ffe2a8;">A</div><div class="msg-body"><div class="msg-u" style="color:#ffe2a8;">Amara_Lagos</div><div class="msg-t">The Jazz History module just dropped Lesson 12 — Coltrane's Quartet era. Absolutely mindblowing.</div><div class="msg-time">14:35</div></div></div>
-              <div class="msg"><div class="msg-av" style="background:rgba(62,233,180,0.16);color:#9bffe0;">E</div><div class="msg-body"><div class="msg-u" style="color:#9bffe0;">Eureka (you)</div><div class="msg-t">Adding Kind of Blue from a local shop this week — eco-conscious collecting.</div><div class="msg-time">14:38</div></div></div>
+              <div class="msg"><div class="msg-av" style="background:rgba(62,233,180,0.16);color:#9bffe0;">P</div><div class="msg-body"><div class="msg-u" style="color:#9bffe0;">Prometea (you)</div><div class="msg-t">Adding Kind of Blue from a local shop this week — eco-conscious collecting.</div><div class="msg-time">14:38</div></div></div>
             </div>
             <div class="chat-inp-row">
               <input class="chat-inp" placeholder="Share with the community..."/>
@@ -857,8 +864,8 @@ function drawLighthouse(t){
   X.restore();
 }
 
-/* ─── EUREKA — translucent tree-being (final reference image) ─── */
-function drawEureka(x,groundY,scale,t,walkPh,alpha,interior){
+/* ─── PROMETEA — translucent dryad-being (the platform's guide) ─── */
+function drawPrometea(x,groundY,scale,t,walkPh,alpha,interior){
   if(alpha<=0) return;
   X.save(); X.globalAlpha=alpha;
   const bob=Math.sin(walkPh)*4*scale;
@@ -986,8 +993,8 @@ function render(){
   // the being — perspective walk up the path, with reflection
   if(state.showChar){
     const gy=state.charY||GROUND, sca=state.charScale||1, wp=state.walk;
-    X.save(); X.translate(0,2*gy); X.scale(1,-1); drawEureka(state.charX,gy,sca,T,wp,state.charAlpha*0.16,false); X.restore();
-    drawEureka(state.charX,gy,sca,T,wp,state.charAlpha,false);
+    X.save(); X.translate(0,2*gy); X.scale(1,-1); drawPrometea(state.charX,gy,sca,T,wp,state.charAlpha*0.16,false); X.restore();
+    drawPrometea(state.charX,gy,sca,T,wp,state.charAlpha,false);
     if(state.charAlpha>0.5){
       const sr=Math.sin(wp), sl=Math.sin(wp+2.1);
       if(sr<-0.92 && lastFootR>=-0.92) ripples.push({x:state.charX+18*sca,y:gy,rad:4,life:1});
@@ -1111,16 +1118,14 @@ const msgEl=document.getElementById('onboard-msg');
 let onbT=0, onbRAF=0, entered=false, doorX=0, startX=0;
 
 function startOnboard(name){
+  // simplified: skip the walk animation. Login fades out, brief flare, dashboard appears.
   document.getElementById('screen-login').classList.add('hidden');
+  Object.assign(state,{showChar:false,charAlpha:0,walk:0,lit:1,beam:1,door:0,rise:1,flash:0,atomA:0});
   setTimeout(()=>{
-    document.getElementById('screen-onboard').classList.remove('hidden');
-    onbT=0; entered=false;
-    Object.assign(state,{showChar:false,charAlpha:0,walk:0,lit:0,flash:0,atomA:0,door:0,beam:0,rise:0});
-    startX=W*0.40; doorX=LX;
-    state.atomX=W*0.46; state.atomY=H*0.46;
-    state.charX=startX; state.charY=H*0.92; state.charScale=1;
-    onbRAF=requestAnimationFrame(animOnboard);
-  },650);
+    state.flash=0.85;
+    setTimeout(()=>{ state.flash=0; },650);
+    document.getElementById('screen-dash').classList.remove('hidden');
+  },700);
 }
 
 function animOnboard(){
