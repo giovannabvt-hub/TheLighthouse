@@ -42,11 +42,24 @@
 
 html,body{width:100%;height:100%;background:var(--bg);color:var(--white);font-family:'Quicksand',sans-serif;overflow:hidden;cursor:none;}
 
-/* ─── luminous SVG glyph system ─── */
+/* ─── composed glyph system (organic-technological) ─── */
 .ic{width:1em;height:1em;display:inline-block;vertical-align:-0.15em;
-  stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;
-  filter:drop-shadow(0 0 3px currentColor) drop-shadow(0 0 7px currentColor);}
+  stroke:currentColor;fill:none;stroke-width:1.35;stroke-linecap:round;stroke-linejoin:round;
+  filter:drop-shadow(0 0 1.5px currentColor);}
 .ic.fillsoft{fill:currentColor;fill-opacity:0.12;}
+.ic .det{stroke-width:0.7;opacity:0.55;}
+.ic .fine{stroke-width:0.6;opacity:0.4;}
+.ic .accent{fill:currentColor;stroke:none;}
+.ic .ring{fill:none;opacity:0.4;}
+/* subtle blueprint constellation overlay used on big surfaces */
+.surface-constellation{position:relative;}
+.surface-constellation::after{content:'';position:absolute;inset:0;pointer-events:none;border-radius:inherit;opacity:0.08;
+  background-image:radial-gradient(circle at 20% 30%, rgba(150,235,255,0.7) 0.5px, transparent 1.2px),
+                   radial-gradient(circle at 70% 60%, rgba(180,160,255,0.7) 0.5px, transparent 1.2px),
+                   radial-gradient(circle at 40% 85%, rgba(255,160,210,0.6) 0.5px, transparent 1.2px),
+                   radial-gradient(circle at 85% 20%, rgba(120,255,220,0.6) 0.5px, transparent 1.2px),
+                   radial-gradient(circle at 10% 75%, rgba(200,200,255,0.5) 0.4px, transparent 1px);
+  background-size:140px 140px,180px 180px,160px 160px,200px 200px,120px 120px;}
 
 /* ─── CURSOR ─── */
 #cursor{position:fixed;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);width:46px;height:46px;}
@@ -191,6 +204,24 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--white);font-fa
 
 .pg-title{font-family:'Cinzel',serif;font-size:1.4rem;font-weight:600;
   background:linear-gradient(90deg,#fff,#9fe8ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:2px;}
+
+/* hero banner — Pandora landscape strip atop the dashboard */
+.hero-banner{position:relative;border-radius:18px;overflow:hidden;margin:6px 0 22px;height:210px;
+  border:1px solid rgba(120,220,255,0.15);box-shadow:0 8px 32px rgba(0,0,0,0.45),inset 0 0 0 1px rgba(255,255,255,0.03);}
+.hero-img{position:absolute;inset:0;background:url('login-bg.webp') center 38%/cover no-repeat;transform:scale(1.02);}
+.hero-overlay{position:absolute;inset:0;background:
+  linear-gradient(90deg,rgba(2,8,18,0.92) 0%,rgba(2,8,18,0.55) 45%,rgba(2,8,18,0.05) 80%,rgba(2,8,18,0) 100%),
+  linear-gradient(180deg,rgba(2,8,18,0) 50%,rgba(2,8,18,0.55) 100%);
+  display:flex;flex-direction:column;justify-content:center;padding:28px 30px;}
+.hero-eyebrow{font-family:'Josefin Sans',sans-serif;font-size:0.55rem;letter-spacing:0.42em;color:rgba(150,235,255,0.65);text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:10px;}
+.hero-eyebrow::before,.hero-eyebrow::after{content:'';flex:0 0 18px;height:1px;background:linear-gradient(90deg,rgba(150,235,255,0.5),transparent);}
+.hero-eyebrow::after{background:linear-gradient(90deg,transparent,rgba(150,235,255,0.5));}
+.hero-title{font-family:'Cinzel',serif;font-size:2.1rem;font-weight:900;letter-spacing:0.06em;line-height:1;
+  background:linear-gradient(180deg,#fff 0%,#cdf2ff 55%,#c8a6ff 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hero-sub{font-family:'Josefin Sans',sans-serif;font-size:0.68rem;letter-spacing:0.24em;color:rgba(190,235,255,0.55);text-transform:uppercase;margin-top:6px;}
+.hero-quote{margin-top:14px;font-family:'Quicksand',sans-serif;font-size:0.82rem;color:rgba(220,240,255,0.78);max-width:380px;line-height:1.55;font-style:italic;border-left:1px solid rgba(150,235,255,0.25);padding-left:12px;}
+@media(max-width:560px){.hero-banner{height:170px;}.hero-title{font-size:1.5rem;}.hero-quote{display:none;}.hero-overlay{padding:18px;}}
 .pg-sub{font-size:0.75rem;color:rgba(160,225,255,0.3);font-family:'Josefin Sans',sans-serif;letter-spacing:0.1em;margin-bottom:24px;}
 .section-label{font-family:'Josefin Sans',sans-serif;font-size:0.64rem;letter-spacing:0.26em;color:rgba(120,235,255,0.34);text-transform:uppercase;margin:24px 0 12px;}
 
@@ -391,12 +422,12 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--white);font-fa
 
 <!-- ═══ luminous glyph sprite ═══ -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
-<symbol id="ic-home" viewBox="0 0 24 24"><path d="M4 13a8 8 0 0 1 16 0"/><path d="M3 13h18"/><path d="M9 21v-5a3 3 0 0 1 6 0v5"/><path d="M12 5V2"/><circle cx="12" cy="2" r="0.6"/></symbol>
-<symbol id="ic-disc" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2.4"/><path d="M12 3a9 9 0 0 1 6.4 2.6"/></symbol>
-<symbol id="ic-exchange" viewBox="0 0 24 24"><path d="M5 9h12l-3-3"/><path d="M19 15H7l3 3"/></symbol>
-<symbol id="ic-book" viewBox="0 0 24 24"><path d="M12 6C9.5 4.2 6 4 4 5v14c2-1 5.5-.8 8 1 2.5-1.8 6-2 8-1V5c-2-1-5.5-.8-8 1Z"/><path d="M12 6v14"/></symbol>
-<symbol id="ic-orbit" viewBox="0 0 24 24"><circle cx="12" cy="12" r="2.4"/><ellipse cx="12" cy="12" rx="10" ry="4.2"/><ellipse cx="12" cy="12" rx="4.2" ry="10"/></symbol>
-<symbol id="ic-leaf" viewBox="0 0 24 24"><path d="M5 19C5 10 11 4 19 5c0 9-6 15-14 14Z"/><path d="M9 15c2.5-3 4.5-5 8-7"/></symbol>
+<symbol id="ic-home" viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M5 21V13a7 7 0 0 1 14 0v8"/><path d="M9 21v-4a3 3 0 0 1 6 0v4"/><path d="M8 13a4 4 0 0 1 8 0" stroke-width="0.7" opacity="0.55"/><path d="M6 17h2M16 17h2" stroke-width="0.7" opacity="0.55"/><path d="M12 6V3"/><circle cx="12" cy="2.6" r="0.7" fill="currentColor" stroke="none"/></symbol>
+<symbol id="ic-disc" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.5"/><circle cx="12" cy="12" r="7" stroke-width="0.6" opacity="0.55"/><circle cx="12" cy="12" r="4.8" stroke-width="0.6" opacity="0.5"/><circle cx="12" cy="12" r="2.3"/><circle cx="12" cy="12" r="0.7" fill="currentColor" stroke="none"/><path d="M12 3.5a8.5 8.5 0 0 1 5.5 2" stroke-width="0.6" opacity="0.4"/></symbol>
+<symbol id="ic-exchange" viewBox="0 0 24 24"><path d="M4.5 10a7.5 7.5 0 0 1 13-3.5"/><path d="M19.5 14a7.5 7.5 0 0 1-13 3.5"/><path d="M17.5 6.5l-0.5 3 3-0.5" stroke-width="0.9" opacity="0.7"/><path d="M6.5 17.5l0.5-3-3 0.5" stroke-width="0.9" opacity="0.7"/><circle cx="12" cy="12" r="1.1" fill="currentColor" stroke="none"/></symbol>
+<symbol id="ic-book" viewBox="0 0 24 24"><path d="M12 6C9.5 4.2 6 4 4 5v14c2-1 5.5-.8 8 1 2.5-1.8 6-2 8-1V5c-2-1-5.5-.8-8 1Z"/><path d="M12 6v14"/><path d="M6 9.5h3M6 12h3M6 14.5h2.5M15 9.5h3M15 12h3M15 14.5h2.5" stroke-width="0.6" opacity="0.5"/><circle cx="12" cy="3.5" r="0.6" fill="currentColor" stroke="none"/></symbol>
+<symbol id="ic-orbit" viewBox="0 0 24 24"><circle cx="12" cy="12" r="2.2"/><ellipse cx="12" cy="12" rx="10" ry="4"/><ellipse cx="12" cy="12" rx="4" ry="10" transform="rotate(60 12 12)"/><circle cx="12" cy="12" r="0.6" fill="currentColor" stroke="none"/><circle cx="22" cy="12" r="0.9" fill="currentColor" stroke="none"/><circle cx="6" cy="3.5" r="0.7" fill="currentColor" stroke="none" opacity="0.7"/><circle cx="18" cy="20.5" r="0.7" fill="currentColor" stroke="none" opacity="0.7"/></symbol>
+<symbol id="ic-leaf" viewBox="0 0 24 24"><path d="M5 19C5 10 11 4 19 5c0 9-6 15-14 14Z"/><path d="M5 19c4.5-4.5 9.5-9.5 14-14"/><path d="M9 15c1-1 2-2 3-3M11.5 17.5c1-1 2-2 3-3M7 13c1.5-1.5 3-3 4.5-4.5M14 11.5c1-1 2-2 3-3" stroke-width="0.6" opacity="0.5"/></symbol>
 <symbol id="ic-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/></symbol>
 <symbol id="ic-send" viewBox="0 0 24 24"><path d="M12 20V5"/><path d="M6 11l6-6 6 6"/></symbol>
 <symbol id="ic-prev" viewBox="0 0 24 24"><path d="M8 6v12"/><path d="M18 6 9 12l9 6Z"/></symbol>
@@ -417,7 +448,7 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--white);font-fa
 <symbol id="ic-tree" viewBox="0 0 24 24"><path d="M12 21v-6"/><path d="M12 15c-4 0-6-3-6-6 0-3 2.5-6 6-6s6 3 6 6c0 3-2 6-6 6Z"/><path d="M12 9v6"/></symbol>
 <symbol id="ic-people" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.4"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0M14.5 19a4 4 0 0 1 6.5-3"/></symbol>
 <symbol id="ic-school" viewBox="0 0 24 24"><path d="M3 9 12 5l9 4-9 4Z"/><path d="M7 11.5V16c0 1.5 2.5 3 5 3s5-1.5 5-3v-4.5"/><path d="M21 9v5"/></symbol>
-<symbol id="ic-observatory" viewBox="0 0 24 24"><path d="M3 20a9 7 0 0 1 18 0"/><path d="M3 20h18"/><path d="M12 5 13.2 8.8 17 10l-3.8 1.2L12 15l-1.2-3.8L7 10l3.8-1.2Z"/></symbol>
+<symbol id="ic-observatory" viewBox="0 0 24 24"><path d="M4 22h16"/><path d="M6 22v-3a6 6 0 0 1 12 0v3"/><path d="M8 19h8"/><path d="M9.5 19v-2.5M14.5 19v-2.5M12 19v-3" stroke-width="0.6" opacity="0.5"/><path d="M10 13.5h4l-1.2-2.5h-1.6Z"/><path d="M11 11l-2.5-1 1-2 2 1" stroke-width="0.9" opacity="0.8"/><path d="M13 11l2.5-1-1-2-2 1" stroke-width="0.9" opacity="0.8"/><path d="M12 8.5V5"/><path d="M12 2.2l0.7 2.1 2.1 0.3-1.5 1.3 0.4 2-1.7-1-1.7 1 0.4-2-1.5-1.3 2.1-0.3Z" fill="currentColor" stroke="none"/></symbol>
 <symbol id="ic-spark" viewBox="0 0 24 24"><path d="M12 3v18M3 12h18M6 6l12 12M18 6 6 18"/></symbol>
 <symbol id="ic-moon" viewBox="0 0 24 24"><path d="M16 4a8 8 0 1 0 4 12A7 7 0 0 1 16 4Z"/></symbol>
 <symbol id="ic-flame" viewBox="0 0 24 24"><path d="M12 21c4 0 6-3 6-6 0-4-4-5-3-10-3 1-7 5-7 10a4 4 0 0 0 4 6Z"/><path d="M12 21a2.5 2.5 0 0 0 0-5c-1 0-1.5 1-1 2"/></symbol>
@@ -505,6 +536,15 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--white);font-fa
     <div class="content-area" id="content-area">
 
       <div class="panel active" id="panel-home">
+        <div class="hero-banner surface-constellation">
+          <div class="hero-img"></div>
+          <div class="hero-overlay">
+            <div class="hero-eyebrow">A sanctuary for the inner life</div>
+            <div class="hero-title">Pharosophia</div>
+            <div class="hero-sub">Where light meets wisdom</div>
+            <div class="hero-quote">Music, knowledge, community and culture in service of learning and reconnecting with yourself.</div>
+          </div>
+        </div>
         <div class="pg-title" id="home-greet">Good evening, Voyager</div>
         <div class="pg-sub" id="home-date"></div>
         <div class="stats-row">
