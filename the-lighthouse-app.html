@@ -42,10 +42,15 @@
 
 html,body{width:100%;height:100%;background:var(--bg);color:var(--white);font-family:'Quicksand',sans-serif;overflow:hidden;cursor:none;}
 
-/* ─── composed glyph system (organic-technological) ─── */
+/* ─── iridescent sacred-geometric glyph system ─── */
 .ic{width:1em;height:1em;display:inline-block;vertical-align:-0.15em;
-  stroke:currentColor;fill:none;stroke-width:1.35;stroke-linecap:round;stroke-linejoin:round;
-  filter:drop-shadow(0 0 1.5px currentColor);}
+  stroke:url(#gradIridescent);fill:none;stroke-width:1.45;stroke-linecap:round;stroke-linejoin:round;
+  filter:
+    drop-shadow(0 0 1.5px rgba(220,200,255,0.7))
+    drop-shadow(0 0 4px rgba(255,200,230,0.32))
+    drop-shadow(0 0 9px rgba(150,220,255,0.18));}
+/* opt-out: when you want a single-color stroke (e.g. a tiny inline accent) */
+.ic.mono{stroke:currentColor;filter:drop-shadow(0 0 1.5px currentColor);}
 .ic.fillsoft{fill:currentColor;fill-opacity:0.12;}
 .ic .det{stroke-width:0.7;opacity:0.55;}
 .ic .fine{stroke-width:0.6;opacity:0.4;}
@@ -445,6 +450,25 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--white);font-fa
 
 <!-- ═══ luminous glyph sprite ═══ -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<linearGradient id="gradIridescent" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+  <stop offset="0%" stop-color="#ffd3e8"/>
+  <stop offset="22%" stop-color="#d2a8ff"/>
+  <stop offset="45%" stop-color="#8de6ff"/>
+  <stop offset="68%" stop-color="#a8f5d6"/>
+  <stop offset="88%" stop-color="#ffe5a8"/>
+  <stop offset="100%" stop-color="#ffcdb2"/>
+</linearGradient>
+<linearGradient id="gradIridescentSoft" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+  <stop offset="0%" stop-color="#ffd3e8" stop-opacity="0.55"/>
+  <stop offset="50%" stop-color="#a8e6ff" stop-opacity="0.55"/>
+  <stop offset="100%" stop-color="#ffe5a8" stop-opacity="0.55"/>
+</linearGradient>
+<radialGradient id="gradFacet" cx="35%" cy="30%" r="80%">
+  <stop offset="0%" stop-color="#ffffff" stop-opacity="0.9"/>
+  <stop offset="35%" stop-color="#d2a8ff" stop-opacity="0.55"/>
+  <stop offset="70%" stop-color="#8de6ff" stop-opacity="0.4"/>
+  <stop offset="100%" stop-color="#ffd3e8" stop-opacity="0"/>
+</radialGradient>
 <symbol id="ic-home" viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M5 21V13a7 7 0 0 1 14 0v8"/><path d="M9 21v-4a3 3 0 0 1 6 0v4"/><path d="M8 13a4 4 0 0 1 8 0" stroke-width="0.7" opacity="0.55"/><path d="M6 17h2M16 17h2" stroke-width="0.7" opacity="0.55"/><path d="M12 6V3"/><circle cx="12" cy="2.6" r="0.7" fill="currentColor" stroke="none"/></symbol>
 <symbol id="ic-disc" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.5"/><circle cx="12" cy="12" r="7" stroke-width="0.6" opacity="0.55"/><circle cx="12" cy="12" r="4.8" stroke-width="0.6" opacity="0.5"/><circle cx="12" cy="12" r="2.3"/><circle cx="12" cy="12" r="0.7" fill="currentColor" stroke="none"/><path d="M12 3.5a8.5 8.5 0 0 1 5.5 2" stroke-width="0.6" opacity="0.4"/></symbol>
 <symbol id="ic-exchange" viewBox="0 0 24 24"><path d="M4.5 10a7.5 7.5 0 0 1 13-3.5"/><path d="M19.5 14a7.5 7.5 0 0 1-13 3.5"/><path d="M17.5 6.5l-0.5 3 3-0.5" stroke-width="0.9" opacity="0.7"/><path d="M6.5 17.5l0.5-3-3 0.5" stroke-width="0.9" opacity="0.7"/><circle cx="12" cy="12" r="1.1" fill="currentColor" stroke="none"/></symbol>
