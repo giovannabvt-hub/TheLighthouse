@@ -42,15 +42,16 @@
 
 html,body{width:100%;height:100%;background:var(--bg);color:var(--white);font-family:'Quicksand',sans-serif;overflow:hidden;cursor:none;}
 
-/* ─── iridescent sacred-geometric glyph system ─── */
+/* ─── iridescent sacred-geometric glyph system (thin + translucent) ─── */
 .ic{width:1em;height:1em;display:inline-block;vertical-align:-0.15em;
-  stroke:url(#gradIridescent);fill:none;stroke-width:1.45;stroke-linecap:round;stroke-linejoin:round;
+  stroke:url(#gradIridescent);fill:none;stroke-width:0.95;stroke-linecap:round;stroke-linejoin:round;
+  opacity:0.82;
   filter:
-    drop-shadow(0 0 1.5px rgba(220,200,255,0.7))
-    drop-shadow(0 0 4px rgba(255,200,230,0.32))
-    drop-shadow(0 0 9px rgba(150,220,255,0.18));}
+    drop-shadow(0 0 1px rgba(220,200,255,0.55))
+    drop-shadow(0 0 3px rgba(255,200,230,0.22))
+    drop-shadow(0 0 7px rgba(150,220,255,0.12));}
 /* opt-out: when you want a single-color stroke (e.g. a tiny inline accent) */
-.ic.mono{stroke:currentColor;filter:drop-shadow(0 0 1.5px currentColor);}
+.ic.mono{stroke:currentColor;filter:drop-shadow(0 0 1px currentColor);}
 .ic.fillsoft{fill:currentColor;fill-opacity:0.12;}
 .ic .det{stroke-width:0.7;opacity:0.55;}
 .ic .fine{stroke-width:0.6;opacity:0.4;}
