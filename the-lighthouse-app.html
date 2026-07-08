@@ -196,7 +196,8 @@ body:has(#screen-login.hidden) #scene{opacity:0;}
 
 .dash-body{display:flex;flex:1;overflow:hidden;position:relative;z-index:2;}
 .sidenav{width:78px;flex-shrink:0;background:linear-gradient(180deg,rgba(3,11,21,0.9),rgba(2,7,16,0.85));
-  border-right:1px solid rgba(90,210,230,0.07);display:flex;flex-direction:column;align-items:center;padding:22px 0;gap:4px;}
+  border-right:1px solid rgba(90,210,230,0.07);display:flex;flex-direction:column;align-items:center;padding:22px 0;gap:4px;overflow-y:auto;}
+.sidenav::-webkit-scrollbar{width:0;}
 .nav-item{display:flex;flex-direction:column;align-items:center;gap:6px;padding:11px 6px;border-radius:15px;cursor:none;
   transition:all .3s ease;width:66px;border:1px solid transparent;position:relative;color:rgba(160,225,255,0.4);}
 .nav-item:hover,.nav-item.active{background:rgba(80,210,230,0.07);border-color:rgba(90,220,240,0.18);}
@@ -397,6 +398,101 @@ body:has(#screen-login.hidden) #scene{opacity:0;}
 .ca-d{font-size:9px;color:rgba(190,225,255,0.32);line-height:1.4;}
 .ca-pts{display:inline-block;margin-top:8px;font-size:8px;padding:3px 9px;border-radius:6px;background:rgba(62,233,180,0.09);color:#9bffe0;border:1px solid rgba(62,233,180,0.2);font-family:'Josefin Sans',sans-serif;letter-spacing:0.05em;}
 
+/* ════════════════════════════
+   SOUND & HEALTH — Resonance Chamber
+════════════════════════════ */
+#screen-dash:has(#panel-health.active){
+  background:
+    linear-gradient(180deg,rgba(2,10,20,0.5) 0%,rgba(2,7,16,0.7) 55%,rgba(1,4,12,0.92) 100%),
+    radial-gradient(ellipse at 50% -10%,rgba(80,220,235,0.1) 0%,transparent 55%),
+    radial-gradient(ellipse at 15% 60%,rgba(180,120,255,0.07) 0%,transparent 45%),
+    url('login-bg.webp') center center / cover no-repeat;
+}
+.sh-banner{background:linear-gradient(135deg,rgba(70,210,235,0.13),rgba(150,110,255,0.12));border:1px solid rgba(120,220,255,0.22);border-radius:20px;padding:22px 26px;display:flex;align-items:center;gap:20px;margin:6px 0 16px;position:relative;overflow:hidden;}
+.sh-banner .sh-b-icon{width:48px;height:48px;flex-shrink:0;}
+.sh-banner .sh-b-icon .ic{width:48px;height:48px;}
+.sh-banner h2{font-family:'Cinzel',serif;font-size:1.05rem;margin-bottom:5px;color:#fff;}
+.sh-banner p{font-size:11px;color:rgba(190,225,255,0.5);line-height:1.7;}
+.sh-note{display:flex;align-items:flex-start;gap:10px;background:rgba(255,217,138,0.05);border:1px solid rgba(255,217,138,0.2);border-radius:12px;padding:12px 15px;margin-bottom:22px;}
+.sh-note .ic{width:15px;height:15px;flex-shrink:0;margin-top:1px;color:var(--gold);}
+.sh-note p{font-size:10px;color:rgba(232,222,192,0.62);line-height:1.65;font-family:'Josefin Sans',sans-serif;letter-spacing:0.02em;}
+.sh-note b{color:rgba(255,236,190,0.85);font-weight:400;}
+
+.sh-needs{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-bottom:18px;}
+.sh-need{border-radius:15px;padding:15px;cursor:none;transition:all .25s;background:rgba(120,210,240,0.03);border:1px solid rgba(120,220,255,0.08);position:relative;overflow:hidden;}
+.sh-need:hover{transform:translateY(-3px);border-color:rgba(140,220,255,0.28);}
+.sh-need.on{border-color:rgba(120,245,255,0.55);background:rgba(80,220,235,0.08);box-shadow:0 0 22px rgba(70,215,235,0.18),inset 0 0 14px rgba(120,255,235,0.05);}
+.sh-need-ic{width:26px;height:26px;margin-bottom:9px;}
+.sh-need-ic .ic{width:26px;height:26px;}
+.sh-need-t{font-size:12px;font-weight:600;color:#fff;margin-bottom:2px;}
+.sh-need-d{font-size:9px;color:rgba(190,225,255,0.4);line-height:1.5;font-family:'Josefin Sans',sans-serif;letter-spacing:0.03em;}
+
+.sh-protocol{border-radius:18px;border:1px solid rgba(120,220,255,0.14);background:linear-gradient(180deg,rgba(10,26,40,0.5),rgba(6,16,28,0.62));padding:20px 22px;margin-bottom:8px;animation:panelin .4s ease;}
+.sh-protocol h3{font-family:'Cinzel',serif;font-size:1rem;color:#fff;margin-bottom:3px;display:flex;align-items:center;gap:9px;}
+.sh-protocol h3 .ic{width:20px;height:20px;}
+.sh-proto-sub{font-size:10px;color:rgba(170,225,255,0.4);font-family:'Josefin Sans',sans-serif;letter-spacing:0.06em;margin-bottom:16px;text-transform:uppercase;}
+.sh-rx{display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:10px;margin-bottom:18px;}
+.sh-rx-item{background:rgba(120,210,240,0.035);border:1px solid rgba(120,220,255,0.09);border-radius:12px;padding:11px 13px;}
+.sh-rx-lbl{font-size:8px;letter-spacing:0.16em;text-transform:uppercase;color:rgba(120,235,255,0.45);font-family:'Josefin Sans',sans-serif;margin-bottom:6px;display:flex;align-items:center;gap:5px;}
+.sh-rx-lbl .ic{width:11px;height:11px;}
+.sh-rx-val{font-size:11px;color:rgba(235,250,255,0.86);line-height:1.5;}
+.sh-ev-lbl{font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:rgba(120,235,255,0.36);font-family:'Josefin Sans',sans-serif;margin-bottom:9px;}
+.sh-ev{display:flex;flex-direction:column;gap:9px;}
+.sh-ev-item{display:flex;gap:9px;align-items:flex-start;font-size:10.5px;line-height:1.55;color:rgba(212,236,255,0.68);}
+.sh-ev-item .ic{width:12px;height:12px;flex-shrink:0;margin-top:2px;color:var(--teal);}
+.sh-ev-src{color:rgba(150,220,255,0.42);font-style:italic;}
+.sh-tag{display:inline-block;font-size:7.5px;padding:2px 7px;border-radius:5px;margin-left:5px;font-family:'Josefin Sans',sans-serif;letter-spacing:0.05em;text-transform:uppercase;vertical-align:middle;white-space:nowrap;}
+.sh-tag.strong{background:rgba(62,233,180,0.12);color:#9bffe0;border:1px solid rgba(62,233,180,0.28);}
+.sh-tag.emerging{background:rgba(255,217,138,0.1);color:#ffe2a8;border:1px solid rgba(255,217,138,0.26);}
+.sh-tag.prelim{background:rgba(180,120,255,0.1);color:#d2b0ff;border:1px solid rgba(180,120,255,0.26);}
+
+.sh-spectrum{display:flex;flex-direction:column;gap:7px;margin-bottom:8px;}
+.sh-band{display:flex;align-items:center;gap:14px;border-radius:13px;padding:12px 15px;background:rgba(120,210,240,0.025);border:1px solid rgba(120,220,255,0.07);transition:all .2s;}
+.sh-band:hover{border-color:rgba(120,235,255,0.24);background:rgba(120,210,240,0.05);}
+.sh-band-bar{width:5px;align-self:stretch;border-radius:3px;flex-shrink:0;min-height:40px;}
+.sh-band-body{flex:1;min-width:0;}
+.sh-band-h{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;}
+.sh-band-name{font-family:'Cinzel',serif;font-size:0.95rem;color:#fff;}
+.sh-band-hz{font-size:10px;color:rgba(150,235,255,0.55);font-family:'Josefin Sans',sans-serif;letter-spacing:0.05em;}
+.sh-band-d{font-size:10.5px;color:rgba(190,225,255,0.5);line-height:1.5;margin-top:3px;}
+
+.sh-player{border-radius:18px;border:1px solid rgba(120,220,255,0.14);background:linear-gradient(180deg,rgba(8,22,36,0.55),rgba(5,14,26,0.65));padding:18px 20px;margin-bottom:8px;}
+.sh-player-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px;flex-wrap:wrap;}
+.sh-player-hd{display:flex;align-items:center;gap:9px;font-size:11px;color:rgba(200,235,255,0.62);font-family:'Josefin Sans',sans-serif;letter-spacing:0.08em;text-transform:uppercase;}
+.sh-player-hd .ic{width:16px;height:16px;}
+.sh-viz{display:flex;align-items:center;gap:3px;height:22px;}
+.sh-viz span{width:3px;border-radius:2px;background:rgba(95,240,235,0.6);box-shadow:0 0 5px rgba(95,240,235,0.5);height:4px;transition:height .12s ease;}
+.sh-tones{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:13px;}
+.sh-tone{background:transparent;border:1px solid rgba(120,220,255,0.14);color:rgba(180,230,255,0.58);font-family:'Josefin Sans',sans-serif;font-size:0.66rem;letter-spacing:0.05em;padding:8px 14px;border-radius:20px;cursor:none;transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:2px;line-height:1.25;}
+.sh-tone small{font-size:0.5rem;opacity:0.62;letter-spacing:0.04em;}
+.sh-tone:hover{border-color:rgba(120,240,255,0.4);color:rgba(210,245,255,0.85);}
+.sh-tone.on{background:rgba(80,225,235,0.14);border-color:rgba(120,245,255,0.6);color:#eafcff;box-shadow:0 0 18px rgba(70,220,235,0.26);}
+.sh-player-ctrl{display:flex;align-items:center;gap:14px;}
+.sh-stop{background:rgba(255,95,140,0.1);border:1px solid rgba(255,120,160,0.3);color:#ff9fbf;font-family:'Josefin Sans',sans-serif;font-size:0.62rem;letter-spacing:0.1em;padding:8px 17px;border-radius:10px;cursor:none;transition:all .2s;text-transform:uppercase;}
+.sh-stop:hover{background:rgba(255,95,140,0.18);color:#fff;}
+.sh-vol{flex:1;max-width:170px;accent-color:var(--aqua);cursor:none;height:3px;}
+.sh-headnote{font-size:9.5px;color:rgba(170,225,255,0.36);font-family:'Josefin Sans',sans-serif;letter-spacing:0.04em;line-height:1.5;margin-top:11px;display:flex;align-items:flex-start;gap:7px;}
+.sh-headnote .ic{width:13px;height:13px;flex-shrink:0;margin-top:1px;}
+
+.sh-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:11px;}
+.sh-card{border-radius:15px;padding:15px;background:rgba(120,210,240,0.025);border:1px solid rgba(120,220,255,0.07);transition:all .22s;}
+.sh-card:hover{transform:translateY(-3px);border-color:rgba(140,210,255,0.22);background:rgba(120,210,240,0.05);}
+.sh-card-h{display:flex;align-items:center;gap:9px;margin-bottom:8px;}
+.sh-card-h .ic{width:18px;height:18px;}
+.sh-card-t{font-size:11.5px;font-weight:600;color:#fff;}
+.sh-card-d{font-size:9.5px;color:rgba(190,225,255,0.46);line-height:1.6;}
+
+.sh-refs{list-style:none;display:flex;flex-direction:column;gap:7px;margin-top:6px;}
+.sh-refs li{font-size:9.5px;color:rgba(170,215,255,0.42);line-height:1.55;font-family:'Josefin Sans',sans-serif;letter-spacing:0.02em;padding-left:15px;position:relative;}
+.sh-refs li::before{content:'';position:absolute;left:0;top:5px;width:5px;height:5px;border-radius:50%;background:rgba(95,235,255,0.4);}
+
+@media(max-width:560px){
+  .sh-banner{flex-direction:column;text-align:center;padding:18px;}
+  .sh-needs{grid-template-columns:repeat(2,1fr);}
+  .sh-rx{grid-template-columns:1fr 1fr;}
+  .sh-cards{grid-template-columns:repeat(2,1fr);}
+}
+
 /* touch / no-hover devices: use native pointer, hide spore cursor */
 @media(hover:none),(pointer:coarse){
   html,body{cursor:auto;}
@@ -512,6 +608,12 @@ body:has(#screen-login.hidden) #scene{opacity:0;}
 <symbol id="ic-mic" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M6 12a6 6 0 0 0 12 0M12 18v3M9 21h6"/></symbol>
 <symbol id="ic-mixer" viewBox="0 0 24 24"><path d="M7 4v6M7 14v6M17 4v10M17 18v2"/><circle cx="7" cy="12" r="2"/><circle cx="17" cy="16" r="2"/></symbol>
 <symbol id="ic-crown" viewBox="0 0 24 24"><path d="M4 18 5 7l5 5 2-6 2 6 5-5 1 11Z"/><path d="M4 18h16"/></symbol>
+<symbol id="ic-pulse" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.2" stroke-width="0.6" opacity="0.45"/><path d="M3 12h3.6l2-4.5 3 9 2-6.5 1.4 2H21"/></symbol>
+<symbol id="ic-brain" viewBox="0 0 24 24"><path d="M12 5.6a3 3 0 0 0-5 2.1A3 3 0 0 0 5.4 12.7 3 3 0 0 0 8 18a3 3 0 0 0 4 1.1"/><path d="M12 5.6a3 3 0 0 1 5 2.1 3 3 0 0 1 1.6 5A3 3 0 0 1 16 18a3 3 0 0 1-4 1.1"/><path d="M12 5.6V19.1" stroke-width="0.7" opacity="0.6"/><circle cx="12" cy="12" r="0.7" fill="url(#gradIridescent)" stroke="none"/></symbol>
+<symbol id="ic-bowl" viewBox="0 0 24 24"><path d="M3.5 11h17a8.5 8.5 0 0 1-17 0Z" fill="url(#gradIridescentSoft)" stroke-width="1.1"/><path d="M9 5.5v3M12 4.2v4.3M15 5.5v3" stroke-width="0.8" opacity="0.75"/><path d="M6.5 11h11" stroke-width="0.5" opacity="0.5"/></symbol>
+<symbol id="ic-lotus" viewBox="0 0 24 24"><path d="M12 20c-2.4 0-4.3-2.2-4.3-4.9C7.7 12.4 9.6 10 12 8c2.4 2 4.3 4.4 4.3 7.1C16.3 17.8 14.4 20 12 20Z" fill="url(#gradIridescentSoft)" stroke-width="1.1"/><path d="M12 20c-4.4 0-7.5-2.6-7.5-6.2 2.4 0 4.2 1 5.5 2.6M12 20c4.4 0 7.5-2.6 7.5-6.2-2.4 0-4.2 1-5.5 2.6" stroke-width="1"/><circle cx="12" cy="14" r="0.7" fill="url(#gradIridescent)" stroke="none"/></symbol>
+<symbol id="ic-headphones" viewBox="0 0 24 24"><path d="M5 13.5v-1.2a7 7 0 0 1 14 0v1.2"/><rect x="3.4" y="13" width="3.6" height="6.2" rx="1.6"/><rect x="17" y="13" width="3.6" height="6.2" rx="1.6"/></symbol>
+<symbol id="ic-check" viewBox="0 0 24 24"><path d="M4.5 12.5l4.5 4.5L20 6"/></symbol>
 </defs></svg>
 
 <canvas id="scene"></canvas>
@@ -577,6 +679,9 @@ body:has(#screen-login.hidden) #scene{opacity:0;}
       </div>
       <div class="nav-item" data-panel="education" onclick="switchPanel('education')">
         <div class="nav-icon"><svg class="ic"><use href="#ic-book"/></svg></div><div class="nav-label">Learn</div>
+      </div>
+      <div class="nav-item" data-panel="health" onclick="switchPanel('health')">
+        <div class="nav-icon"><svg class="ic"><use href="#ic-pulse"/></svg></div><div class="nav-label">Healing</div>
       </div>
       <div class="nav-item" data-panel="community" onclick="switchPanel('community')">
         <div class="nav-icon"><svg class="ic"><use href="#ic-orbit"/></svg></div><div class="nav-label">Chat</div><div class="nav-pip"></div>
@@ -664,6 +769,57 @@ body:has(#screen-login.hidden) #scene{opacity:0;}
           <div class="cc"><div class="cc-icon" style="color:var(--violet)"><svg class="ic"><use href="#ic-speaker"/></svg></div><div class="cc-t">Sound &amp; Frequency</div><div class="cc-d">Wavelengths, acoustics, solfège — why music moves us.</div><div class="prog"><div class="prog-fill" style="width:45%;background:linear-gradient(90deg,var(--violet),#d2b0ff);"></div></div><div class="cc-lvl">45% · Intermediate</div></div>
           <div class="cc"><div class="cc-icon" style="color:var(--aqua)"><svg class="ic"><use href="#ic-temple"/></svg></div><div class="cc-t">Global Music Cultures</div><div class="cc-d">Gamelan, Carnatic, Flamenco, Cumbia — a world tour.</div><div class="prog"><div class="prog-fill" style="width:0%;background:rgba(95,247,255,0.5);"></div></div><div class="cc-lvl">Coming Soon</div></div>
         </div>
+      </div>
+
+      <div class="panel" id="panel-health">
+        <div class="pg-title">Sound &amp; Health</div>
+        <div class="pg-sub">Music as medicine — frequencies, genres &amp; instruments matched to what you need</div>
+        <div class="sh-banner">
+          <div class="sh-b-icon"><svg class="ic"><use href="#ic-lotus"/></svg></div>
+          <div>
+            <h2>The Resonance Chamber</h2>
+            <p>Sound reaches the body before thought does. This chamber gathers what research in music therapy and neuroscience has learned about how frequency, rhythm, genre and instrument shape pain, mood, focus, sleep and healing — and turns it into something you can actually listen to.</p>
+          </div>
+        </div>
+        <div class="sh-note">
+          <svg class="ic"><use href="#ic-spark"/></svg>
+          <p>Educational &amp; complementary — not a substitute for medical care. Evidence strength is labelled on every claim: <b>Established</b> (meta-analyses / clinical trials), <b>Emerging</b> (promising but early), <b>Preliminary</b> (limited or contested). If you have a medical condition, use sound alongside — never instead of — professional treatment.</p>
+        </div>
+
+        <div class="section-label">What do you need today?</div>
+        <div class="sh-needs" id="sh-needs"></div>
+        <div id="sh-protocol"></div>
+
+        <div class="section-label">The frequency spectrum</div>
+        <div class="sh-spectrum" id="sh-spectrum"></div>
+
+        <div class="section-label">Attune — pure tones &amp; brainwave beats</div>
+        <div class="sh-player">
+          <div class="sh-player-top">
+            <div class="sh-player-hd"><svg class="ic"><use href="#ic-wave"/></svg><span>Resonance generator</span></div>
+            <div class="sh-viz" id="sh-viz"></div>
+          </div>
+          <div class="sh-tones" id="sh-tones"></div>
+          <div class="sh-player-ctrl">
+            <button class="sh-stop" type="button" id="sh-stop">Stop</button>
+            <input class="sh-vol" id="sh-vol" type="range" min="0" max="100" value="22" aria-label="Volume"/>
+          </div>
+          <div class="sh-headnote"><svg class="ic"><use href="#ic-headphones"/></svg><span>Use headphones for the binaural beats — the effect depends on a slightly different tone reaching each ear. Keep the volume gentle; these are generated live in your browser.</span></div>
+        </div>
+        <div class="sh-note" style="margin-top:12px">
+          <svg class="ic"><use href="#ic-spark"/></svg>
+          <p><b>On 432 Hz &amp; 528 Hz:</b> these alternative tunings are beloved in sound-healing but rest on <b>preliminary</b> evidence — a few small studies hint at slightly lower heart rate or anxiety versus standard 440 Hz, yet results are mixed and inconclusive. Enjoy them, but hold the grander claims lightly. Brainwave <i>binaural beats</i> have more support for relaxation, mood and attention, though the effect varies from person to person.</p>
+        </div>
+
+        <div class="section-label">Genres &amp; styles — what the studies show</div>
+        <div class="sh-cards" id="sh-genres"></div>
+
+        <div class="section-label">Instruments &amp; musical elements</div>
+        <div class="sh-cards" id="sh-instruments"></div>
+
+        <div class="section-label">Key studies &amp; sources</div>
+        <ul class="sh-refs" id="sh-refs"></ul>
+        <div style="height:26px"></div>
       </div>
 
       <div class="panel" id="panel-community">
@@ -1293,6 +1449,258 @@ card.addEventListener('submit',e=>{
   const g=document.getElementById('home-greet'); if(g) g.textContent='Good evening, '+u;
   startOnboard(u);
 });
+
+/* ═══════════════════════════════════════════════
+   SOUND & HEALTH — Resonance Chamber
+   Evidence-based sound/music protocols + live tone generator
+═══════════════════════════════════════════════ */
+(function(){
+  const $=id=>document.getElementById(id);
+  if(!$('sh-needs')) return;
+
+  const tagName={strong:'Established',emerging:'Emerging',prelim:'Preliminary'};
+  const rxIcon={Frequency:'ic-wave',Tempo:'ic-pulse',Genre:'ic-note',Instrument:'ic-bowl',Session:'ic-radio'};
+
+  /* ── needs → tailored sound protocols ── */
+  const NEEDS=[
+    {id:'pain',icon:'ic-pulse',color:'62,233,209',t:'Physical Pain',d:'Post-op · chronic · procedural',
+      rx:{Frequency:'Low-frequency vibroacoustic + slow melodic music',Tempo:'60–80 BPM, steady',Genre:'Slow classical, ambient, your own favourites',Instrument:'Strings, piano, singing bowls',Session:'20–30 min, before &amp; during pain'},
+      ev:[
+        {c:'Music before, during or after surgery significantly reduced pain and the need for opioid painkillers.',s:'Hole et al., 2015 — The Lancet (systematic review, 73 trials)',tag:'strong'},
+        {c:'Listening to music modestly lowered pain intensity and analgesic use across acute &amp; chronic pain.',s:'Cepeda et al., 2006 — Cochrane Database of Systematic Reviews',tag:'strong'},
+        {c:'Patient-chosen music outperforms imposed tracks — familiarity and preference amplify the effect.',s:'Consistent finding across music-therapy trials',tag:'strong'}]},
+    {id:'anxiety',icon:'ic-bowl',color:'150,235,255',t:'Anxiety &amp; Stress',d:'Overwhelm · tension · pre-procedure nerves',
+      rx:{Frequency:'Alpha entrainment 8–12 Hz; slow, predictable music',Tempo:'≤ 60 BPM',Genre:'Ambient, nature soundscapes, slow classical',Instrument:'Singing bowls, harp, soft strings',Session:'15–30 min with slow breathing'},
+      ev:[
+        {c:'Relaxing music lowered pre-operative anxiety as effectively as the sedative midazolam — without side effects.',s:'Bringman et al., 2009 — Acta Anaesthesiologica Scandinavica',tag:'strong'},
+        {c:'Music reduced anxiety and improved heart rate &amp; blood pressure in heart-disease patients.',s:'Bradt &amp; Dileo, 2013 — Cochrane Database of Systematic Reviews',tag:'strong'},
+        {c:'A single Tibetan singing-bowl sound meditation significantly reduced tension, anger and anxiety.',s:'Goldsby et al., 2017 — J. Evidence-Based Complementary &amp; Alt. Medicine',tag:'emerging'}]},
+    {id:'mood',icon:'ic-flame',color:'255,95,206',t:'Emotional &amp; Mood',d:'Low mood · grief · flatness',
+      rx:{Frequency:'Major-key, uplifting music; sing along',Tempo:'90–130 BPM',Genre:'Personally meaningful songs, gospel, upbeat pop',Instrument:'Voice, rhythm, full-band energy',Session:'Active listening or singing'},
+      ev:[
+        {c:'Music therapy added to usual care reduced symptoms of depression and anxiety.',s:'Aalbers et al., 2017 — Cochrane Database of Systematic Reviews',tag:'strong'},
+        {c:'Peak emotional moments in music ("chills") release dopamine in the brain’s reward system.',s:'Salimpoor et al., 2011 — Nature Neuroscience',tag:'strong'},
+        {c:'Singing — especially in groups — lifts mood and lowers stress hormones.',s:'Choral-singing research (e.g. Kreutz et al.)',tag:'emerging'}]},
+    {id:'focus',icon:'ic-bolt',color:'95,247,255',t:'Focus &amp; Concentration',d:'Study · deep work · reading',
+      rx:{Frequency:'Beta 13–20 Hz; steady, low-surprise sound',Tempo:'50–90 BPM instrumental',Genre:'Lo-fi, ambient, Baroque, film scores — avoid lyrics for verbal work',Instrument:'Soft synth pads, piano',Session:'Match to task; silence for the hardest parts'},
+      ev:[
+        {c:'Lyrics and unpredictable music impair reading comprehension and other verbal tasks.',s:'Perham &amp; Currie, 2014 — Applied Cognitive Psychology',tag:'strong'},
+        {c:'Steady background sound and pink noise can support sustained attention and memory.',s:'Noise-and-attention research; Papalambros et al., 2017',tag:'emerging'},
+        {c:'The "Mozart effect" on IQ is largely a myth — brief arousal, not lasting intelligence.',s:'Pietschnig et al., 2010 — Intelligence (meta-analysis)',tag:'strong'}]},
+    {id:'sleep',icon:'ic-moon',color:'180,120,255',t:'Sleep &amp; Insomnia',d:'Trouble falling or staying asleep',
+      rx:{Frequency:'Delta 0.5–4 Hz; pink noise',Tempo:'&lt; 60 BPM, gradually fading',Genre:'Ambient drone, slow classical, rain / ocean',Instrument:'Pads, low strings, nature',Session:'30–45 min at bedtime'},
+      ev:[
+        {c:'Listening to music improves sleep quality in people with insomnia.',s:'Jespersen et al., 2022 — Cochrane Database of Systematic Reviews',tag:'strong'},
+        {c:'Pink noise synced to slow brain waves deepened sleep and improved next-day memory.',s:'Papalambros et al., 2017 — Frontiers in Human Neuroscience',tag:'emerging'}]},
+    {id:'cognition',icon:'ic-brain',color:'255,217,138',t:'Cognition &amp; Memory',d:'Ageing · dementia · Alzheimer’s',
+      rx:{Frequency:'40 Hz gamma sensory stimulation',Genre:'Personalised, familiar music from one’s youth',Instrument:'Rhythm, sing-along melodies',Session:'Daily personalised playlists'},
+      ev:[
+        {c:'40 Hz light-and-sound stimulation reduced Alzheimer’s-type plaques and improved memory in mice; human trials are underway.',s:'Martorell / Tsai et al., 2019 — Cell (MIT GENUS)',tag:'emerging'},
+        {c:'Personalised familiar music reduces agitation and improves mood in dementia care.',s:'Music-and-dementia reviews (van der Steen et al., Cochrane)',tag:'emerging'},
+        {c:'Deeply familiar songs can reach memory and emotion even in advanced dementia.',s:'Clinical &amp; neuroimaging observations',tag:'emerging'}]},
+    {id:'movement',icon:'ic-orbit',color:'62,233,209',t:'Movement &amp; Rehab',d:'Parkinson’s · stroke · gait',
+      rx:{Frequency:'Rhythmic Auditory Stimulation — a steady external beat',Tempo:'At or just above natural step rate',Genre:'Strongly rhythmic music, march, metronome',Instrument:'Drums, percussion, clear pulse',Session:'During walking / physiotherapy'},
+      ev:[
+        {c:'A steady rhythmic beat improves walking speed, stride length and symmetry in Parkinson’s and stroke.',s:'Thaut et al. — Rhythmic Auditory Stimulation research',tag:'strong'},
+        {c:'The motor system naturally entrains (locks) to an external beat — the basis of music-supported rehab.',s:'Sensorimotor-synchronisation research',tag:'strong'}]}
+  ];
+
+  const SPECTRUM=[
+    {n:'Delta',hz:'0.5 – 4 Hz',c:'180,120,255',d:'Deep, dreamless sleep and physical restoration. The slowest waves — the body repairs itself here.'},
+    {n:'Theta',hz:'4 – 8 Hz',c:'120,120,255',d:'Deep meditation, drowsiness, REM dreams and creative reverie. The threshold of the subconscious.'},
+    {n:'Alpha',hz:'8 – 13 Hz',c:'95,247,255',d:'Calm, relaxed alertness. Lower anxiety and the gateway to flow — eyes closed, at ease.'},
+    {n:'Beta',hz:'13 – 30 Hz',c:'62,233,209',d:'Active thinking, focus, problem-solving and alertness. The everyday waking mind.'},
+    {n:'Gamma',hz:'30 – 100 Hz',c:'255,217,138',d:'Peak concentration, perception and memory binding. 40 Hz is the focus of Alzheimer’s research.'}
+  ];
+
+  const TONES=[
+    {id:'delta',label:'Delta',sub:'2 Hz beat',type:'binaural',carrier:200,beat:2},
+    {id:'theta',label:'Theta',sub:'6 Hz beat',type:'binaural',carrier:200,beat:6},
+    {id:'alpha',label:'Alpha',sub:'10 Hz beat',type:'binaural',carrier:220,beat:10},
+    {id:'beta',label:'Beta',sub:'18 Hz beat',type:'binaural',carrier:240,beat:18},
+    {id:'gamma',label:'Gamma',sub:'40 Hz beat',type:'binaural',carrier:250,beat:40},
+    {id:'t432',label:'432 Hz',sub:'pure tone',type:'pure',freq:432},
+    {id:'t528',label:'528 Hz',sub:'pure tone',type:'pure',freq:528},
+    {id:'pink',label:'Pink noise',sub:'sleep · focus',type:'pink'}
+  ];
+
+  const GENRES=[
+    {icon:'ic-keys',c:'95,247,255',t:'Classical / Adagio',d:'Slow classical lowers cortisol, blood pressure and heart rate — a reliable route to the relaxation response.'},
+    {icon:'ic-wave',c:'180,120,255',t:'Ambient / Drone',d:'Sparse, evolving textures with no strong beat settle the nervous system and support deep focus or sleep.'},
+    {icon:'ic-leaf',c:'62,233,209',t:'Nature Soundscapes',d:'Water, wind and birdsong shift the body toward "rest-and-digest" and speed recovery from stress.'},
+    {icon:'ic-radio',c:'95,247,255',t:'Lo-fi / Instrumental',d:'Low-arousal, repetitive and word-free — an ideal background for sustained concentration.'},
+    {icon:'ic-mixer',c:'255,95,206',t:'Rhythmic / Drumming',d:'A strong pulse drives movement, eases pain and — in groups — lifts mood and even immune markers.'},
+    {icon:'ic-flame',c:'255,217,138',t:'Uplifting Pop / Gospel',d:'Bright major keys and driving tempo trigger dopamine and energise low mood.'},
+    {icon:'ic-temple',c:'150,235,255',t:'Devotional / Chant',d:'Gregorian chant, mantra and kirtan slow the breath toward ~6/min and raise calming vagal tone.'},
+    {icon:'ic-orbit',c:'120,120,255',t:'Binaural / Meditation',d:'Tracks engineered to nudge the brain toward alpha/theta states for relaxation and inner focus.'}
+  ];
+
+  const INSTR=[
+    {icon:'ic-bowl',c:'150,235,255',t:'Singing Bowls',d:'Rich overtones and slow decay in sound baths measurably reduce tension, anger and anxiety.'},
+    {icon:'ic-note',c:'180,120,255',t:'Harp',d:'Soft, resonant and non-percussive — long used in palliative and end-of-life music-thanatology.'},
+    {icon:'ic-keys',c:'95,247,255',t:'Piano &amp; Strings',d:'Expressive melody and warmth make them the workhorses of relaxation and emotional release.'},
+    {icon:'ic-mixer',c:'255,95,206',t:'Drums &amp; Percussion',d:'Entrain heart rate and gait; group drumming lowers stress and boosts wellbeing.'},
+    {icon:'ic-mic',c:'255,217,138',t:'The Human Voice',d:'Humming, chanting and "OM" stimulate the vagus nerve; humming raises nasal nitric oxide.'},
+    {icon:'ic-radio',c:'62,233,209',t:'Flute &amp; Winds',d:'Breath-driven, flowing lines naturally lengthen the listener’s own breathing.'},
+    {icon:'ic-pulse',c:'62,233,209',t:'Rhythm &amp; Tempo',d:'The body syncs to tempo — around 60 BPM calms toward resting heart rate; faster energises.'},
+    {icon:'ic-wave',c:'180,120,255',t:'Melody &amp; Mode',d:'Major vs minor, rising vs falling lines carry emotion — the grammar of musical feeling.'}
+  ];
+
+  const REFS=[
+    'Hole J. et al. (2015). Music as an aid for postoperative recovery in adults: a systematic review and meta-analysis. The Lancet, 386(10004), 1659–1671.',
+    'Cepeda M.S. et al. (2006). Music for pain relief. Cochrane Database of Systematic Reviews.',
+    'Bradt J. &amp; Dileo C. (2013). Music interventions for preoperative anxiety &amp; coronary heart disease. Cochrane Database of Systematic Reviews.',
+    'Bringman H. et al. (2009). Relaxing music as pre-medication before surgery. Acta Anaesthesiologica Scandinavica, 53(6), 759–764.',
+    'Aalbers S. et al. (2017). Music therapy for depression. Cochrane Database of Systematic Reviews.',
+    'Salimpoor V.N. et al. (2011). Anatomically distinct dopamine release during anticipation and experience of peak emotion to music. Nature Neuroscience, 14, 257–262.',
+    'Jespersen K.V. et al. (2022). Music for insomnia in adults. Cochrane Database of Systematic Reviews.',
+    'Papalambros N.A. et al. (2017). Acoustic enhancement of sleep slow oscillations and concomitant memory improvement in older adults. Frontiers in Human Neuroscience, 11, 109.',
+    'Martorell A.J., Tsai L.-H. et al. (2019). Multi-sensory gamma stimulation ameliorates Alzheimer’s-associated pathology and improves cognition. Cell, 177(2), 256–271.',
+    'Thaut M.H. et al. Rhythmic auditory stimulation in gait training for Parkinson’s disease and stroke rehabilitation (multiple studies).',
+    'Perham N. &amp; Currie H. (2014). Does listening to preferred music improve reading comprehension performance? Applied Cognitive Psychology, 28(2), 279–284.',
+    'Goldsby T.L. et al. (2017). Effects of singing bowl sound meditation on mood, tension, and well-being. J. Evidence-Based Complementary &amp; Alt. Medicine, 22(3), 401–406.',
+    'Pietschnig J. et al. (2010). Mozart effect–Shmozart effect: a meta-analysis. Intelligence, 38(3), 314–323.'
+  ];
+
+  /* ── render: needs ── */
+  const needsEl=$('sh-needs');
+  needsEl.innerHTML=NEEDS.map((n,i)=>
+    `<div class="sh-need${i===0?' on':''}" data-need="${n.id}">
+       <div class="sh-need-ic" style="color:rgb(${n.color})"><svg class="ic mono"><use href="#${n.icon}"/></svg></div>
+       <div class="sh-need-t">${n.t}</div>
+       <div class="sh-need-d">${n.d}</div>
+     </div>`).join('');
+
+  function renderProtocol(n){
+    const rx=Object.keys(n.rx).map(k=>
+      `<div class="sh-rx-item">
+         <div class="sh-rx-lbl"><svg class="ic"><use href="#${rxIcon[k]||'ic-spark'}"/></svg>${k}</div>
+         <div class="sh-rx-val">${n.rx[k]}</div>
+       </div>`).join('');
+    const ev=n.ev.map(e=>
+      `<div class="sh-ev-item"><svg class="ic"><use href="#ic-check"/></svg>
+         <span>${e.c} <span class="sh-tag ${e.tag}">${tagName[e.tag]}</span><br>
+         <span class="sh-ev-src">${e.s}</span></span></div>`).join('');
+    $('sh-protocol').innerHTML=
+      `<div class="sh-protocol">
+         <h3><svg class="ic mono" style="color:rgb(${n.color})"><use href="#${n.icon}"/></svg>${n.t}</h3>
+         <div class="sh-proto-sub">Your sound protocol · ${n.d}</div>
+         <div class="sh-rx">${rx}</div>
+         <div class="sh-ev-lbl">What the evidence says</div>
+         <div class="sh-ev">${ev}</div>
+       </div>`;
+  }
+  needsEl.querySelectorAll('.sh-need').forEach(card=>card.addEventListener('click',()=>{
+    needsEl.querySelectorAll('.sh-need').forEach(c=>c.classList.remove('on'));
+    card.classList.add('on');
+    renderProtocol(NEEDS.find(x=>x.id===card.dataset.need));
+  }));
+  renderProtocol(NEEDS[0]);
+
+  /* ── render: spectrum ── */
+  $('sh-spectrum').innerHTML=SPECTRUM.map(b=>
+    `<div class="sh-band">
+       <div class="sh-band-bar" style="background:linear-gradient(180deg,rgba(${b.c},0.9),rgba(${b.c},0.25));box-shadow:0 0 10px rgba(${b.c},0.4)"></div>
+       <div class="sh-band-body">
+         <div class="sh-band-h"><span class="sh-band-name">${b.n}</span><span class="sh-band-hz">${b.hz}</span></div>
+         <div class="sh-band-d">${b.d}</div>
+       </div>
+     </div>`).join('');
+
+  /* ── render: genres + instruments ── */
+  const cardHTML=x=>
+    `<div class="sh-card">
+       <div class="sh-card-h"><svg class="ic mono" style="color:rgb(${x.c})"><use href="#${x.icon}"/></svg><span class="sh-card-t">${x.t}</span></div>
+       <div class="sh-card-d">${x.d}</div>
+     </div>`;
+  $('sh-genres').innerHTML=GENRES.map(cardHTML).join('');
+  $('sh-instruments').innerHTML=INSTR.map(cardHTML).join('');
+
+  /* ── render: references ── */
+  $('sh-refs').innerHTML=REFS.map(r=>`<li>${r}</li>`).join('');
+
+  /* ═══ live tone generator (Web Audio) ═══ */
+  const vizEl=$('sh-viz');
+  vizEl.innerHTML=Array.from({length:9}).map(()=>'<span></span>').join('');
+  const vizBars=[...vizEl.querySelectorAll('span')];
+
+  let ctx=null,masterGain=null,nodes=[],active=null;
+  function vol(){return (parseInt($('sh-vol').value,10)/100)*0.45;}
+  function ensureCtx(){
+    if(!ctx){
+      const AC=window.AudioContext||window.webkitAudioContext;
+      if(!AC) return false;
+      ctx=new AC(); masterGain=ctx.createGain(); masterGain.gain.value=vol(); masterGain.connect(ctx.destination);
+    }
+    if(ctx.state==='suspended') ctx.resume();
+    return true;
+  }
+  function pinkBuffer(){
+    const len=ctx.sampleRate*2, buf=ctx.createBuffer(1,len,ctx.sampleRate), d=buf.getChannelData(0);
+    let b0=0,b1=0,b2=0,b3=0,b4=0,b5=0,b6=0;
+    for(let i=0;i<len;i++){
+      const w=Math.random()*2-1;
+      b0=0.99886*b0+w*0.0555179; b1=0.99332*b1+w*0.0750759; b2=0.96900*b2+w*0.1538520;
+      b3=0.86650*b3+w*0.3104856; b4=0.55000*b4+w*0.5329522; b5=-0.7616*b5-w*0.0168980;
+      d[i]=(b0+b1+b2+b3+b4+b5+b6+w*0.5362)*0.11; b6=w*0.115926;
+    }
+    return buf;
+  }
+  function stopAll(){
+    nodes.forEach(n=>{try{n.stop&&n.stop();}catch(e){} try{n.disconnect();}catch(e){}});
+    nodes=[]; active=null;
+    document.querySelectorAll('.sh-tone').forEach(b=>b.classList.remove('on'));
+  }
+  function play(tn,btn){
+    if(!ensureCtx()) return;
+    const wasActive=active===tn.id;
+    stopAll();
+    if(wasActive) return;
+    masterGain.gain.value=vol();
+    const now=ctx.currentTime;
+    if(tn.type==='binaural'){
+      [0,1].forEach(side=>{
+        const o=ctx.createOscillator(); o.type='sine';
+        o.frequency.value=tn.carrier+(side?tn.beat:0);
+        if(ctx.createStereoPanner){
+          const p=ctx.createStereoPanner(); p.pan.value=side?1:-1;
+          o.connect(p); p.connect(masterGain); nodes.push(p);
+        } else { o.connect(masterGain); }
+        o.start(now); nodes.push(o);
+      });
+    } else if(tn.type==='pure'){
+      const o=ctx.createOscillator(); o.type='sine'; o.frequency.value=tn.freq;
+      o.connect(masterGain); o.start(now); nodes.push(o);
+    } else if(tn.type==='pink'){
+      const src=ctx.createBufferSource(); src.buffer=pinkBuffer(); src.loop=true;
+      src.connect(masterGain); src.start(now); nodes.push(src);
+    }
+    active=tn.id; btn.classList.add('on');
+  }
+
+  $('sh-tones').innerHTML=TONES.map(t=>
+    `<button class="sh-tone" type="button" data-tone="${t.id}">${t.label}<small>${t.sub}</small></button>`).join('');
+  $('sh-tones').querySelectorAll('.sh-tone').forEach(btn=>btn.addEventListener('click',()=>{
+    play(TONES.find(t=>t.id===btn.dataset.tone),btn);
+  }));
+  $('sh-stop').addEventListener('click',stopAll);
+  $('sh-vol').addEventListener('input',()=>{ if(masterGain) masterGain.gain.value=vol(); });
+
+  /* visualiser + stop audio when leaving the panel */
+  let vphase=0;
+  (function vizLoop(){
+    vphase+=0.28;
+    const on=!!active;
+    vizBars.forEach((b,i)=>{
+      const h=on ? 4+Math.abs(Math.sin(vphase+i*0.7))*15*(0.5+Math.random()*0.5) : 3;
+      b.style.height=h.toFixed(1)+'px';
+    });
+    requestAnimationFrame(vizLoop);
+  })();
+
+  const _sw=window.switchPanel;
+  window.switchPanel=function(name){ if(name!=='health') stopAll(); return _sw(name); };
+})();
 </script>
 </body>
 </html>
